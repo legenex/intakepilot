@@ -37,6 +37,10 @@ import Buyers from '@/pages/Buyers';
 import BuyerDetail from '@/pages/BuyerDetail';
 import Analytics from '@/pages/Analytics';
 import DataSources from '@/pages/DataSources';
+import Agents from '@/pages/Agents';
+import SMSInbox from '@/pages/SMSInbox';
+import CallCenter from '@/pages/CallCenter';
+import SMSCampaigns from '@/pages/SMSCampaigns';
 import ComingSoon from '@/pages/ComingSoon';
 
 // Settings
@@ -115,8 +119,13 @@ const AuthenticatedApp = () => {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/integrations/data-sources" element={<DataSources />} />
 
+        {/* AI Agents & Comms */}
+        <Route path="/agents" element={<Agents />} />
+        <Route path="/sms/inbox" element={<SMSInbox />} />
+        <Route path="/sms/campaigns" element={<SMSCampaigns />} />
+        <Route path="/calls" element={<CallCenter />} />
+
         {/* Future stubs */}
-        <Route path="/agents" element={<ComingSoon />} />
         <Route path="/workflows" element={<ComingSoon />} />
       </Route>
 

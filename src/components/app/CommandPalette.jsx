@@ -1,18 +1,37 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
-import { LayoutDashboard, Settings, Users, CreditCard, HelpCircle, Upload, UserPlus, BarChart3, Briefcase } from 'lucide-react';
+import { LayoutDashboard, Settings, Users, CreditCard, HelpCircle, Upload, UserPlus, BarChart3, Briefcase, Zap, Phone, MessageSquare } from 'lucide-react';
 
-const commands = [
-  { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
-  { label: 'View Leads', icon: Users, href: '/leads' },
-  { label: 'Import CSV', icon: Upload, href: '/leads/import' },
-  { label: 'Add Buyer', icon: Briefcase, href: '/buyers' },
-  { label: 'Analytics', icon: BarChart3, href: '/analytics' },
-  { label: 'Organization Settings', icon: Settings, href: '/settings/organization' },
-  { label: 'Team Members', icon: Users, href: '/settings/team' },
-  { label: 'Billing', icon: CreditCard, href: '/settings/billing' },
-  { label: 'Support', icon: HelpCircle, href: '/contact' },
+const commandGroups = [
+  {
+    label: 'Pipeline',
+    commands: [
+      { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
+      { label: 'View Leads', icon: Users, href: '/leads' },
+      { label: 'Import CSV', icon: Upload, href: '/leads/import' },
+      { label: 'Buyers', icon: Briefcase, href: '/buyers' },
+      { label: 'Analytics', icon: BarChart3, href: '/analytics' },
+    ],
+  },
+  {
+    label: 'AI Automation',
+    commands: [
+      { label: 'AI Agents', icon: Zap, href: '/agents' },
+      { label: 'Call Center', icon: Phone, href: '/calls' },
+      { label: 'SMS Inbox', icon: MessageSquare, href: '/sms/inbox' },
+      { label: 'SMS Campaigns', icon: MessageSquare, href: '/sms/campaigns' },
+    ],
+  },
+  {
+    label: 'Settings',
+    commands: [
+      { label: 'Organization Settings', icon: Settings, href: '/settings/organization' },
+      { label: 'Team Members', icon: UserPlus, href: '/settings/team' },
+      { label: 'Billing', icon: CreditCard, href: '/settings/billing' },
+      { label: 'Support', icon: HelpCircle, href: '/contact' },
+    ],
+  },
 ];
 
 export default function CommandPalette({ open, onOpenChange }) {
@@ -23,18 +42,20 @@ export default function CommandPalette({ open, onOpenChange }) {
       <CommandInput placeholder="Search commands..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Navigation">
-          {commands.map(cmd => (
-            <CommandItem
-              key={cmd.href}
-              onSelect={() => { navigate(cmd.href); onOpenChange(false); }}
-              className="cursor-pointer"
-            >
-              <cmd.icon className="w-4 h-4 mr-2" />
-              {cmd.label}
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        {commandGroups.map(group => (
+          <CommandGroup key={group.label} heading={group.label}>
+            {group.commands.map(cmd => (
+              <CommandItem
+                key={cmd.href}
+                onSelect={() => { navigate(cmd.href); onOpenChange(false); }}
+                className="cursor-pointer"
+              >
+                <cmd.icon className="w-4 h-4 mr-2" />
+                {cmd.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        ))}
       </CommandList>
     </CommandDialog>
   );

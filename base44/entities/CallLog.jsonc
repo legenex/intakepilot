@@ -1,0 +1,108 @@
+{
+  "name": "CallLog",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "outbound",
+        "inbound"
+      ],
+      "default": "outbound"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "initiated",
+        "ringing",
+        "in_progress",
+        "completed",
+        "no_answer",
+        "busy",
+        "failed",
+        "voicemail"
+      ],
+      "default": "queued"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "default": 0
+    },
+    "from_number": {
+      "type": "string"
+    },
+    "to_number": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "provider_call_id": {
+      "type": "string"
+    },
+    "recording_url": {
+      "type": "string"
+    },
+    "transcript": {
+      "type": "string"
+    },
+    "ai_summary": {
+      "type": "string"
+    },
+    "qualification_result": {
+      "type": "string",
+      "enum": [
+        "qualified",
+        "disqualified",
+        "no_answer",
+        "callback_requested",
+        "transferred",
+        "pending"
+      ],
+      "default": "pending"
+    },
+    "qualification_data": {
+      "type": "object"
+    },
+    "warm_transfer_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "warm_transfer_buyer_id": {
+      "type": "string"
+    },
+    "transfer_outcome": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "attempt_number": {
+      "type": "number",
+      "default": 1
+    },
+    "cost_cents": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id"
+  ]
+}

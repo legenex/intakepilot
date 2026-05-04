@@ -1,0 +1,93 @@
+{
+  "name": "SMSMessage",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "outbound",
+        "inbound"
+      ],
+      "default": "outbound"
+    },
+    "from_number": {
+      "type": "string"
+    },
+    "to_number": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "sent",
+        "delivered",
+        "failed",
+        "received",
+        "undelivered"
+      ],
+      "default": "queued"
+    },
+    "provider": {
+      "type": "string",
+      "default": "twilio"
+    },
+    "provider_sid": {
+      "type": "string"
+    },
+    "media_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ai_classified": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_intent": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "negative",
+        "question",
+        "stop",
+        "callback_request",
+        "document_sent",
+        "unknown"
+      ]
+    },
+    "ai_suggested_reply": {
+      "type": "string"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "delivered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cost_cents": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id",
+    "body"
+  ]
+}

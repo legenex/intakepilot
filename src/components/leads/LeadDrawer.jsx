@@ -15,6 +15,8 @@ import LeadBuyerHistoryTab from './tabs/LeadBuyerHistoryTab';
 import LeadRawDataTab from './tabs/LeadRawDataTab';
 import LeadRightRail from './LeadRightRail';
 import DeliverLeadModal from './DeliverLeadModal';
+import LeadCallsTab from './tabs/LeadCallsTab';
+import LeadMessagesTab from './tabs/LeadMessagesTab';
 
 export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdmin }) {
   const { currentOrg } = useOrg();
@@ -88,8 +90,8 @@ export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdm
           <Button size="sm" variant="outline" className="h-7 text-xs gap-1 text-destructive border-destructive/30" onClick={markDNC} disabled={lead.status === 'dnc'}>
             <AlertOctagon className="w-3 h-3" /> Mark DNC
           </Button>
-          <Button size="sm" variant="outline" className="h-7 text-xs gap-1 opacity-50" disabled title="Voice agent coming soon">
-            <Phone className="w-3 h-3" /> Call
+          <Button size="sm" variant="outline" className="h-7 text-xs gap-1 text-primary border-primary/30" asChild>
+            <a href={`/sms/inbox`}><MessageSquare className="w-3 h-3" /> SMS</a>
           </Button>
         </div>
       )}
@@ -121,19 +123,11 @@ export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdm
               <TabsContent value="activity" className="m-0 p-5">
                 <LeadActivityTab leadId={leadId} orgId={currentOrg?.id} />
               </TabsContent>
-              <TabsContent value="calls" className="m-0 p-5">
-                <div className="text-center py-12 text-muted-foreground">
-                  <Phone className="w-8 h-8 mx-auto mb-3 opacity-30" />
-                  <p className="text-sm font-medium">No calls yet</p>
-                  <p className="text-xs mt-1">Voice intake coming soon</p>
-                </div>
+              <TabsContent value="calls" className="m-0">
+                <LeadCallsTab lead={lead} orgId={currentOrg?.id} />
               </TabsContent>
-              <TabsContent value="messages" className="m-0 p-5">
-                <div className="text-center py-12 text-muted-foreground">
-                  <MessageSquare className="w-8 h-8 mx-auto mb-3 opacity-30" />
-                  <p className="text-sm font-medium">No messages yet</p>
-                  <p className="text-xs mt-1">SMS automation coming soon</p>
-                </div>
+              <TabsContent value="messages" className="m-0">
+                <LeadMessagesTab lead={lead} orgId={currentOrg?.id} />
               </TabsContent>
               <TabsContent value="documents" className="m-0 p-5">
                 <LeadDocumentsTab lead={lead} orgId={currentOrg?.id} canEdit={canEdit} onRefresh={loadLead} />

@@ -1,18 +1,40 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Settings, Users, HelpCircle, LogOut, ChevronDown, Building2, Briefcase, BarChart3, Database } from 'lucide-react';
+import {
+  LayoutDashboard, Settings, Users, HelpCircle, LogOut, ChevronDown,
+  Building2, Briefcase, BarChart3, Database, Zap, MessageSquare, Phone
+} from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { useOrg } from '@/lib/OrgContext';
 import { base44 } from '@/api/base44Client';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-const navItems = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Leads', href: '/leads', icon: Users },
-  { label: 'Buyers', href: '/buyers', icon: Briefcase },
-  { label: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { label: 'Data Sources', href: '/integrations/data-sources', icon: Database },
-  { label: 'Settings', href: '/settings', icon: Settings },
+const NAV_SECTIONS = [
+  {
+    label: 'Pipeline',
+    items: [
+      { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+      { label: 'Leads', href: '/leads', icon: Users },
+      { label: 'Buyers', href: '/buyers', icon: Briefcase },
+      { label: 'Analytics', href: '/analytics', icon: BarChart3 },
+    ],
+  },
+  {
+    label: 'AI Automation',
+    items: [
+      { label: 'Agents', href: '/agents', icon: Zap },
+      { label: 'Call Center', href: '/calls', icon: Phone },
+      { label: 'SMS Inbox', href: '/sms/inbox', icon: MessageSquare },
+      { label: 'SMS Campaigns', href: '/sms/campaigns', icon: MessageSquare },
+    ],
+  },
+  {
+    label: 'Platform',
+    items: [
+      { label: 'Data Sources', href: '/integrations/data-sources', icon: Database },
+      { label: 'Settings', href: '/settings', icon: Settings },
+    ],
+  },
 ];
 
 export default function AppSidebar({ collapsed, onClose }) {
@@ -51,26 +73,33 @@ export default function AppSidebar({ collapsed, onClose }) {
         </DropdownMenu>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
-        {navItems.map(item => {
-          const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
-          return (
-            <Link
-              key={item.href}
-              to={item.href}
-              onClick={onClose}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-sidebar-accent text-sidebar-primary'
-                  : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
-              }`}
-            >
-              <item.icon className="w-4 h-4" />
-              {item.label}
-            </Link>
-          );
-        })}
+      {/* Nav sections */}
+      <nav className="flex-1 p-2 overflow-y-auto space-y-4">
+        {NAV_SECTIONS.map(section => (
+          <div key={section.label}>
+            <p className="px-3 pb-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{section.label}</p>
+            <div className="space-y-0.5">
+              {section.items.map(item => {
+                const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={onClose}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-sidebar-accent text-sidebar-primary'
+                        : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                    }`}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
