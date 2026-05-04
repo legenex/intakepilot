@@ -1,0 +1,39 @@
+{
+  "name": "SuperAdminGrant",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Lowercased email granted super admin access"
+    },
+    "granted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "granted_by": {
+      "type": "string",
+      "description": "Email of granter, or 'system_bootstrap' / 'system_seed'"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "If false, this grant has been revoked"
+    },
+    "revoked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_by": {
+      "type": "string",
+      "description": "Email of who revoked this grant"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes about this grant"
+    }
+  },
+  "required": [
+    "email",
+    "granted_by"
+  ]
+}

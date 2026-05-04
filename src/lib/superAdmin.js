@@ -1,15 +1,34 @@
-/**
- * Helper to check if a user is a super admin
- * Checks user.super_admin field (set by initializeSuperAdmin)
- */
+import { base44 } from '@/api/base44Client';
+
+let cachedResult = null;
+let cachedEmail = null;
+
 export async function isSuperAdmin(user) {
-  if (!user) return false;
+  if (!user || !user.email) return false;
   
-  // Check if user has super_admin flag set
-  if (user.super_admin === true) {
-    return true;
+  const emailLower = user.email.toLowerCase();
+  
+  // Cache check
+  if (cachedEmail === emailLower && cachedResult !== null) {
+    return cachedResult;
   }
   
-  // If flag not present, they're not a super admin
-  return false;
+  try {
+    const grants = await base44.entities.SuperAdminGrant.filter({ 
+      email: emailLower, 
+      active: true 
+    });
+    const result = grants.length > 0;
+    cachedEmail = emailLower;
+    cachedResult = result;
+    return result;
+  } catch (err) {
+    console.error('Super admin check failed:', err);
+    return false;
+  }
+}
+
+export function clearSuperAdminCache() {
+  cachedResult = null;
+  cachedEmail = null;
 }

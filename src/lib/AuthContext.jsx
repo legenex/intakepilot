@@ -98,6 +98,17 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setIsLoadingAuth(false);
       setAuthChecked(true);
+      
+      // Seed super admins once per session
+      if (!localStorage.getItem('intakepilot-super-admins-seeded')) {
+        try {
+          const { seedSuperAdmins } = await import('@/functions/seedSuperAdmins');
+          await seedSuperAdmins({});
+          localStorage.setItem('intakepilot-super-admins-seeded', 'true');
+        } catch (err) {
+          console.warn('Super admin seed failed:', err);
+        }
+      }
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);

@@ -1,14 +1,38 @@
-import React from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
-import { useAuth } from '@/lib/AuthContext';
+import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
+import { isSuperAdmin } from '@/lib/superAdmin';
 import PlatformSidebar from './PlatformSidebar';
+import PlatformTopBar from './PlatformTopBar';
+import PageNotFound from '@/lib/PageNotFound';
 
 export default function PlatformLayout() {
-  const { user } = useAuth();
+  const [isAuthorized, setIsAuthorized] = useState(null);
 
-  // Check if user is super admin
-  if (!user || user.super_admin !== true) {
-    return <Navigate to="/" replace />;
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const user = await base44.auth.me();
+        const isAdmin = await isSuperAdmin(user);
+        setIsAuthorized(isAdmin);
+      } catch (err) {
+        console.error('Auth check failed:', err);
+        setIsAuthorized(false);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  if (isAuthorized === null) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return <PageNotFound />;
   }
 
   return (

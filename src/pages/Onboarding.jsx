@@ -54,65 +54,89 @@ export default function Onboarding() {
   }, [navigate]);
 
   const createOrganization = async () => {
-     setLoading(true);
-     const slug = orgName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-     const trialEnd = new Date();
-     trialEnd.setDate(trialEnd.getDate() + 14);
+    setLoading(true);
+    const slug = orgName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const trialEnd = new Date();
+    trialEnd.setDate(trialEnd.getDate() + 14);
 
-     try {
-       const org = await base44.entities.Organization.create({
-         name: orgName,
-         slug,
-         vertical,
-         subscription_status: 'trialing',
-         plan: selectedPlan,
-         plan_interval: 'monthly',
-         trial_ends_at: trialEnd.toISOString(),
-         onboarding_completed: true,
-       });
+    try {
+      // Check if user already has an org (idempotency)
+      const existingMemberships = await base44.entities.OrganizationMember.filter({
+        user_email: user.email,
+        status: 'active',
+      });
+      
+      let org;
+      if (existingMemberships.length > 0) {
+        org = await base44.entities.Organization.filter({
+          id: existingMemberships[0].organization_id,
+        });
+        if (org.length) {
+          org = org[0];
+        } else {
+          throw new Error('Organization not found');
+        }
+      } else {
+        // Create new organization
+        org = await base44.entities.Organization.create({
+          name: orgName,
+          slug,
+          vertical,
+          subscription_status: 'trialing',
+          plan: selectedPlan,
+          plan_interval: 'monthly',
+          trial_ends_at: trialEnd.toISOString(),
+          onboarding_completed: true,
+        });
 
-       await base44.entities.OrganizationMember.create({
-         organization_id: org.id,
-         user_email: user.email,
-         user_name: user.full_name,
-         role: 'owner',
-         status: 'active',
-         joined_at: new Date().toISOString(),
-       });
+        // Add user as member
+        await base44.entities.OrganizationMember.create({
+          organization_id: org.id,
+          user_email: user.email,
+          user_name: user.full_name,
+          role: 'owner',
+          status: 'active',
+          joined_at: new Date().toISOString(),
+        });
+      }
 
-       await base44.auth.updateMe({ current_organization_id: org.id });
-       localStorage.setItem('intakepilot-current-org', org.id);
+      // Store org in localStorage (source of truth)
+      localStorage.setItem('intakepilot-current-org', org.id);
 
-       // Attempt Stripe checkout
-       try {
-         const { stripeCheckout } = await import('@/functions/stripeCheckout');
-         const checkoutRes = await stripeCheckout({
-           plan: selectedPlan,
-           interval: 'monthly',
-           organization_id: org.id,
-         });
+      // Attempt Stripe checkout (non-blocking)
+      try {
+        const { stripeCheckout } = await import('@/functions/stripeCheckout');
+        const checkoutRes = await stripeCheckout({
+          plan: selectedPlan,
+          interval: 'monthly',
+          organization_id: org.id,
+        });
 
-         if (checkoutRes.data?.checkout_url) {
-           window.location.href = checkoutRes.data.checkout_url;
-           return;
-         }
-       } catch (stripeError) {
-         console.error('Stripe checkout error:', stripeError);
-       }
+        if (checkoutRes.data?.checkout_url) {
+          window.location.href = checkoutRes.data.checkout_url;
+          return;
+        }
+      } catch (stripeError) {
+        console.error('Stripe checkout error:', stripeError);
+      }
 
-       // Stripe not configured or failed — proceed with trial
-       toast({
-         title: 'Trial activated!',
-         description: 'You can add payment details later in Settings → Billing.',
-       });
-       setStep(3);
-     } catch (error) {
-       console.error('Onboarding error:', error);
-       toast({ title: 'Error creating organization', variant: 'destructive' });
-     } finally {
-       setLoading(false);
-     }
-   };
+      // Proceed to dashboard (Stripe optional)
+      toast({
+        title: 'Trial activated!',
+        description: 'You can add payment details later in Settings → Billing.',
+      });
+      setStep(3);
+    } catch (error) {
+      console.error('Onboarding error:', error);
+      toast({ 
+        title: 'Error setting up your workspace', 
+        description: error.message,
+        variant: 'destructive' 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const stepContent = [
     // Step 0: Welcome

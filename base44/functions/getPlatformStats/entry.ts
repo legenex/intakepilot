@@ -1,12 +1,21 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
+async function isSuperAdmin(base44, user) {
+  if (!user || !user.email) return false;
+  const grants = await base44.asServiceRole.entities.SuperAdminGrant.filter({
+    email: user.email.toLowerCase(),
+    active: true,
+  });
+  return grants.length > 0;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (user?.role !== 'admin') {
-      return Response.json({ error: 'Admin required' }, { status: 403 });
+    if (!await isSuperAdmin(base44, user)) {
+      return Response.json({ error: 'Not found' }, { status: 404 });
     }
 
     // Fetch orgs
