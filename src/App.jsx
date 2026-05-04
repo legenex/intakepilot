@@ -60,6 +60,11 @@ import PlatformApiKeys from '@/pages/platform/PlatformApiKeys';
 import PlatformDangerZone from '@/pages/platform/PlatformDangerZone';
 import PlatformWorkflows from '@/pages/platform/PlatformWorkflows';
 import PlatformBigQuery from '@/pages/platform/PlatformBigQuery';
+import PlatformOrganizations from '@/pages/platform/PlatformOrganizations';
+import PlatformOrganizationDetail from '@/pages/platform/PlatformOrganizationDetail';
+import PlatformUsers from '@/pages/platform/PlatformUsers';
+import PlatformUserDetail from '@/pages/platform/PlatformUserDetail';
+import PlatformImpersonation from '@/pages/platform/PlatformImpersonation';
 
 // Settings
 import SettingsRedirect from '@/pages/settings/SettingsRedirect';
@@ -157,6 +162,11 @@ const AuthenticatedApp = () => {
       {/* Platform (Super Admin) */}
       <Route element={<PlatformLayout />}>
         <Route path="/platform" element={<PlatformDashboard />} />
+        <Route path="/platform/organizations" element={<PlatformOrganizations />} />
+        <Route path="/platform/organizations/:id" element={<PlatformOrganizationDetail />} />
+        <Route path="/platform/users" element={<PlatformUsers />} />
+        <Route path="/platform/users/:id" element={<PlatformUserDetail />} />
+        <Route path="/platform/impersonation" element={<PlatformImpersonation />} />
         <Route path="/platform/billing" element={<PlatformBilling />} />
         <Route path="/platform/health" element={<PlatformHealth />} />
         <Route path="/platform/support" element={<PlatformSupport />} />

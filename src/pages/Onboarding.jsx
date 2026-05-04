@@ -83,20 +83,29 @@ export default function Onboarding() {
        await base44.auth.updateMe({ current_organization_id: org.id });
        localStorage.setItem('intakepilot-current-org', org.id);
 
-       // Initiate Stripe checkout
-       const { stripeCheckout } = await import('@/functions/stripeCheckout');
-       const checkoutRes = await stripeCheckout({
-         plan: selectedPlan,
-         interval: 'monthly',
-         organization_id: org.id,
-       });
+       // Attempt Stripe checkout
+       try {
+         const { stripeCheckout } = await import('@/functions/stripeCheckout');
+         const checkoutRes = await stripeCheckout({
+           plan: selectedPlan,
+           interval: 'monthly',
+           organization_id: org.id,
+         });
 
-       if (checkoutRes.data?.checkout_url) {
-         window.location.href = checkoutRes.data.checkout_url;
-       } else {
-         toast({ title: 'Stripe not configured. Trial mode activated.', description: 'Contact support to enable payments.' });
-         setStep(3);
+         if (checkoutRes.data?.checkout_url) {
+           window.location.href = checkoutRes.data.checkout_url;
+           return;
+         }
+       } catch (stripeError) {
+         console.error('Stripe checkout error:', stripeError);
        }
+
+       // Stripe not configured or failed — proceed with trial
+       toast({
+         title: 'Trial activated!',
+         description: 'You can add payment details later in Settings → Billing.',
+       });
+       setStep(3);
      } catch (error) {
        console.error('Onboarding error:', error);
        toast({ title: 'Error creating organization', variant: 'destructive' });

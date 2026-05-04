@@ -52,11 +52,8 @@ export default function AppSidebar({ collapsed, onClose }) {
   const checkSuperAdmin = async () => {
     try {
       const user = await base44.auth.me();
-      if (user) {
-        const users = await base44.asServiceRole.entities.User.filter({ id: user.id });
-        if (users.length && users[0].super_admin) {
-          setIsSuperAdmin(true);
-        }
+      if (user?.super_admin === true) {
+        setIsSuperAdmin(true);
       }
     } catch (err) {
       console.error('Super admin check failed:', err);

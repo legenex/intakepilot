@@ -7,7 +7,7 @@ export default function PlatformLayout() {
   const { user } = useAuth();
 
   // Check if user is super admin
-  if (!user || user.role !== 'admin') {
+  if (!user || user.super_admin !== true) {
     return <Navigate to="/" replace />;
   }
 

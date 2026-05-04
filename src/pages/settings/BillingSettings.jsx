@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { PLAN_LIMITS, PLAN_PRICING } from '@/lib/planLimits';
 import { useToast } from '@/components/ui/use-toast';
-import { AlertTriangle, CreditCard, ExternalLink, ArrowUpRight, Loader2 } from 'lucide-react';
+import { AlertTriangle, CreditCard, ExternalLink, ArrowUpRight, Loader2, ArrowUpRight as ArrowIcon } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function BillingSettings() {
@@ -88,6 +88,22 @@ export default function BillingSettings() {
 
   return (
     <div className="space-y-6 max-w-4xl">
+      {/* Stripe not configured banner */}
+      {!currentOrg.stripe_customer_id && (
+        <div className="flex items-start gap-3 p-4 rounded-xl border border-warning/30 bg-warning/5">
+          <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="font-semibold text-sm text-warning">Stripe Not Yet Connected</p>
+            <p className="text-xs text-muted-foreground mt-1">You're in trial mode. Connect Stripe to enable billing and keep your account active after the trial.</p>
+            <a href="/integrations" className="inline-block mt-2">
+              <Button size="sm" variant="outline" className="gap-1.5">
+                Set Up Payments <ArrowUpRight className="w-3.5 h-3.5" />
+              </Button>
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Past due banner */}
       {subStatus.isPastDue && (
         <div className="flex items-start gap-3 p-4 rounded-xl border border-destructive/30 bg-destructive/5">

@@ -25,6 +25,14 @@ const OVERAGE_PRICES = {
 
 Deno.serve(async (req) => {
   try {
+    // Check if Stripe is configured
+    if (!Deno.env.get('STRIPE_SECRET_KEY')) {
+      return Response.json(
+        { error: 'Stripe not configured', code: 'stripe_not_configured' },
+        { status: 200 }
+      );
+    }
+
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
@@ -43,7 +51,7 @@ Deno.serve(async (req) => {
     }
 
     if (!PLAN_PRICES[plan][interval]) {
-      return Response.json({ error: 'Stripe price not configured' }, { status: 500 });
+      return Response.json({ error: 'Stripe price not configured' }, { status: 200 });
     }
 
     // Fetch org
@@ -112,6 +120,7 @@ Deno.serve(async (req) => {
     return Response.json({ checkout_url: session.url });
   } catch (error) {
     console.error('Stripe checkout error:', error.message);
-    return Response.json({ error: error.message }, { status: 500 });
+    // Return 200 with error flag so client can handle gracefully
+    return Response.json({ error: error.message, code: 'stripe_error' }, { status: 200 });
   }
 });
