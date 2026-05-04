@@ -38,13 +38,20 @@ export default function Onboarding() {
       const me = await base44.auth.me();
       setUser(me);
       // Check if user already has org
-      const memberships = await base44.entities.OrganizationMember.filter({ user_email: me.email, status: 'active' });
-      if (memberships.length > 0) {
-        navigate('/dashboard');
+      try {
+        const memberships = await base44.entities.OrganizationMember.filter({ 
+          user_email: me.email, 
+          status: 'active' 
+        });
+        if (memberships && memberships.length > 0) {
+          navigate('/dashboard');
+        }
+      } catch (error) {
+        console.error('Failed to check memberships:', error);
       }
     };
     loadUser();
-  }, []);
+  }, [navigate]);
 
   const createOrganization = async () => {
      setLoading(true);
