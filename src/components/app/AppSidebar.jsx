@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Settings, Users, HelpCircle, LogOut, ChevronDown,
   Building2, Briefcase, BarChart3, Database, Zap, MessageSquare, Phone,
-  Shield, PlugZap
+  Shield, PlugZap, Crown
 } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { useOrg } from '@/lib/OrgContext';
 import { base44 } from '@/api/base44Client';
+import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const NAV_SECTIONS = [
@@ -42,6 +43,25 @@ const NAV_SECTIONS = [
 export default function AppSidebar({ collapsed, onClose }) {
   const location = useLocation();
   const { currentOrg, orgs, switchOrg } = useOrg();
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+  useEffect(() => {
+    checkSuperAdmin();
+  }, []);
+
+  const checkSuperAdmin = async () => {
+    try {
+      const user = await base44.auth.me();
+      if (user) {
+        const users = await base44.asServiceRole.entities.User.filter({ id: user.id });
+        if (users.length && users[0].super_admin) {
+          setIsSuperAdmin(true);
+        }
+      }
+    } catch (err) {
+      console.error('Super admin check failed:', err);
+    }
+  };
 
   return (
     <div className={`h-full flex flex-col bg-sidebar border-r border-sidebar-border ${collapsed ? 'w-0 overflow-hidden' : 'w-60'} transition-all duration-200`}>
@@ -50,6 +70,20 @@ export default function AppSidebar({ collapsed, onClose }) {
       </div>
 
       {/* Org switcher */}
+      {/* Super admin section */}
+      {isSuperAdmin && (
+        <div className="p-2 border-b border-sidebar-border">
+          <Link
+            to="/platform"
+            className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-600 hover:text-indigo-700 transition-colors"
+          >
+            <Crown className="w-4 h-4" />
+            <span className="text-xs font-semibold">Platform</span>
+            <Badge className="ml-auto bg-indigo-500/20 text-indigo-600 text-[9px] py-0 px-1.5">Admin</Badge>
+          </Link>
+        </div>
+      )}
+
       <div className="p-3 border-b border-sidebar-border">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
