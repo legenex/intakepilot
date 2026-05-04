@@ -9,48 +9,44 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userRecords = await base44.asServiceRole.entities.User.filter({
-      id: user.id,
-    });
-
-    if (!userRecords.length || !userRecords[0].super_admin) {
-      return Response.json({ error: 'Not authorized' }, { status: 403 });
-    }
-
+    const body = await req.json();
     const {
       action_type,
-      target_type,
+      target_type = 'organization',
       target_id,
       target_organization_id,
-      reason,
       before_state,
       after_state,
-      impersonated_user_id,
-    } = await req.json();
+      reason,
+    } = body;
 
-    const ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'unknown';
-    const userAgent = req.headers.get('user-agent') || 'unknown';
+    // Check super admin
+    const adminGrant = await base44.asServiceRole.entities.SuperAdminGrant.filter({
+      email: user.email.toLowerCase(),
+      active: true,
+    });
 
+    if (adminGrant.length === 0) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Create audit log entry
     const log = await base44.asServiceRole.entities.SuperAdminAuditLog.create({
       user_id: user.id,
-      user_email: user.email,
       action_type,
       target_type,
       target_id,
       target_organization_id,
-      reason,
       before_state,
       after_state,
-      ip_address: ip,
-      user_agent: userAgent,
-      impersonating: !!impersonated_user_id,
-      impersonated_user_id,
-      occurred_at: new Date().toISOString(),
+      reason,
+      ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+      user_agent: req.headers.get('user-agent'),
     });
 
-    return Response.json({ logged: true, log_id: log.id });
+    return Response.json({ logged: true, id: log.id });
   } catch (error) {
-    console.error('Audit log error:', error.message);
+    console.error('Audit log error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

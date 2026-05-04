@@ -21,8 +21,8 @@ export default function ProfileSettings() {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.auth.updateMe({ theme_preference: theme });
-    toast({ title: 'Profile updated' });
+    localStorage.setItem('intakepilot-theme', theme);
+    toast({ title: 'Theme preference saved' });
     setSaving(false);
   };
 

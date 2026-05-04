@@ -93,6 +93,22 @@
       "default": false,
       "description": "When true, paywall logic ignores subscription_status. Used for internally supported accounts."
     },
+    "status_disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, organization is disabled and users cannot access it"
+    },
+    "disabled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "disabled_by": {
+      "type": "string",
+      "description": "Super admin email who disabled this org"
+    },
+    "disabled_reason": {
+      "type": "string"
+    },
     "soft_delete_at": {
       "type": "string",
       "format": "date-time",
@@ -101,6 +117,10 @@
     "cancel_reason": {
       "type": "string",
       "description": "Reason captured from Stripe cancellation"
+    },
+    "internal_notes": {
+      "type": "string",
+      "description": "Super admin notes about this organization"
     }
   },
   "required": [

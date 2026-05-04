@@ -60,7 +60,7 @@ export default function Onboarding() {
     trialEnd.setDate(trialEnd.getDate() + 14);
 
     try {
-      // Check if user already has an org (idempotency)
+      // Prevent duplicates: check if user already has an org with this name (case-insensitive)
       const existingMemberships = await base44.entities.OrganizationMember.filter({
         user_email: user.email,
         status: 'active',
@@ -68,13 +68,42 @@ export default function Onboarding() {
       
       let org;
       if (existingMemberships.length > 0) {
-        org = await base44.entities.Organization.filter({
-          id: existingMemberships[0].organization_id,
-        });
-        if (org.length) {
-          org = org[0];
+        // User has active membership(s), check if any match the name they're trying to create
+        const orgs = await Promise.all(
+          existingMemberships.map(m =>
+            base44.entities.Organization.filter({ id: m.organization_id }).then(res => res[0])
+          )
+        );
+        
+        const matchingOrg = orgs.find(o => o && o.name.toLowerCase() === orgName.toLowerCase());
+        if (matchingOrg) {
+          // Existing org with same name found, reuse it
+          org = matchingOrg;
+          toast({
+            title: 'Found your existing organization',
+            description: `You're being added to ${matchingOrg.name}.`,
+          });
         } else {
-          throw new Error('Organization not found');
+          // Different name, allow creating new org (multi-org scenario)
+          org = await base44.entities.Organization.create({
+            name: orgName,
+            slug,
+            vertical,
+            subscription_status: 'trialing',
+            plan: selectedPlan,
+            plan_interval: 'monthly',
+            trial_ends_at: trialEnd.toISOString(),
+            onboarding_completed: true,
+          });
+
+          await base44.entities.OrganizationMember.create({
+            organization_id: org.id,
+            user_email: user.email,
+            user_name: user.full_name,
+            role: 'owner',
+            status: 'active',
+            joined_at: new Date().toISOString(),
+          });
         }
       } else {
         // Create new organization

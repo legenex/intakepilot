@@ -23,9 +23,17 @@ export function OrgProvider({ children }) {
         return;
       }
 
-      const orgIds = memberships.map(m => m.organization_id);
-      const allOrgs = await base44.entities.Organization.list();
-      const userOrgs = allOrgs.filter(o => orgIds.includes(o.id));
+      const userOrgs = [];
+      for (const m of memberships) {
+        try {
+          const orgs = await base44.entities.Organization.filter({ id: m.organization_id });
+          if (orgs.length > 0 && !orgs[0].soft_delete_at) {
+            userOrgs.push(orgs[0]);
+          }
+        } catch (err) {
+          // Silently skip inaccessible orgs
+        }
+      }
       
       setOrgs(userOrgs);
       

@@ -2,14 +2,32 @@
   "name": "ImpersonationSession",
   "type": "object",
   "properties": {
-    "super_admin_user_id": {
-      "type": "string"
+    "super_admin_email": {
+      "type": "string",
+      "description": "Email of super admin initiating impersonation"
     },
-    "target_user_id": {
-      "type": "string"
+    "target_user_email": {
+      "type": "string",
+      "description": "Email of user being impersonated"
     },
     "target_organization_id": {
-      "type": "string"
+      "type": "string",
+      "description": "Organization context for impersonation"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "Customer Support",
+        "Bug Investigation",
+        "Account Recovery",
+        "Data Verification",
+        "Other"
+      ],
+      "description": "Reason for impersonation"
+    },
+    "reason_details": {
+      "type": "string",
+      "description": "Free text additional details"
     },
     "started_at": {
       "type": "string",
@@ -19,32 +37,27 @@
       "type": "string",
       "format": "date-time"
     },
-    "duration_minutes": {
-      "type": "number"
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "1 hour from started_at"
     },
-    "reason": {
+    "ip_address": {
       "type": "string"
     },
-    "ended_reason": {
-      "type": "string",
-      "enum": [
-        "manual",
-        "timeout",
-        "logout",
-        "forced"
-      ]
+    "user_agent": {
+      "type": "string"
     },
-    "audit_log_entry_count": {
-      "type": "number",
-      "default": 0
+    "active": {
+      "type": "boolean",
+      "default": true
     }
   },
   "required": [
-    "super_admin_user_id",
-    "target_user_id",
+    "super_admin_email",
+    "target_user_email",
     "target_organization_id",
-    "started_at",
-    "duration_minutes",
-    "reason"
+    "reason",
+    "expires_at"
   ]
 }

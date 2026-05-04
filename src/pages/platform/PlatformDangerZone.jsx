@@ -4,8 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertTriangle, Shield } from 'lucide-react';
+import { AlertTriangle, Shield, Loader2, Zap } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function PlatformDangerZone() {
   const { toast } = useToast();
@@ -14,6 +22,8 @@ export default function PlatformDangerZone() {
   const [confirmText, setConfirmText] = useState('');
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
+  const [wipeConfirm, setWipeConfirm] = useState(false);
+  const [wipeLoading, setWipeLoading] = useState(false);
 
   useEffect(() => {
     loadOrgs();
@@ -72,6 +82,24 @@ export default function PlatformDangerZone() {
     });
 
     loadOrgs();
+  };
+
+  const handleWipeNonLegenex = async () => {
+    setWipeLoading(true);
+    try {
+      const result = await base44.functions.invoke('wipeNonLegenexOrgs', {});
+      const report = result.data;
+      toast({
+        title: 'Wipe complete',
+        description: `Deleted ${report.deleted_orgs.length} organizations. Total records deleted: ${Object.values(report.deleted_records).reduce((a, b) => a + b, 0)}.`,
+      });
+      loadOrgs();
+      setWipeConfirm(false);
+    } catch (err) {
+      toast({ title: 'Wipe failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setWipeLoading(false);
+    }
   };
 
   const pendingDeletion = orgs.filter(o => o.soft_delete_at);
@@ -169,6 +197,27 @@ export default function PlatformDangerZone() {
         </CardContent>
       </Card>
 
+      {/* Wipe non-Legenex orgs */}
+      <Card className="border-destructive/50">
+        <CardHeader>
+          <CardTitle className="text-sm font-semibold">Wipe Non-Legenex Organizations</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-xs text-muted-foreground mb-3">
+            Permanently delete all organizations except Legenex. Consolidates all @legenex.com emails into the canonical Legenex organization. Use only for emergency cleanup.
+          </p>
+          <Button
+            variant="destructive"
+            onClick={() => setWipeConfirm(true)}
+            disabled={wipeLoading}
+            className="text-xs gap-2"
+          >
+            {wipeLoading && <Loader2 className="w-3 h-3 animate-spin" />}
+            <Zap className="w-4 h-4" /> Wipe Non-Legenex
+          </Button>
+        </CardContent>
+      </Card>
+
       {/* Reset analytics caches */}
       <Card className="border-warning/30">
         <CardHeader>
@@ -179,6 +228,31 @@ export default function PlatformDangerZone() {
           <Button variant="outline" className="text-xs">Reset Caches</Button>
         </CardContent>
       </Card>
+
+      {/* Wipe confirmation */}
+      <AlertDialog open={wipeConfirm} onOpenChange={setWipeConfirm}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogTitle>Delete all non-Legenex organizations?</AlertDialogTitle>
+          <AlertDialogDescription className="space-y-3 text-xs">
+            <p>This will permanently hard-delete every organization except Legenex and all their associated leads, calls, messages, and other records.</p>
+            <p className="font-semibold">All @legenex.com emails will be consolidated into the canonical Legenex organization (Agency plan).</p>
+            <p className="text-destructive">This action cannot be undone.</p>
+            <p>Type <span className="font-mono font-semibold">DELETE-ALL-EXCEPT-LEGENEX</span> to confirm:</p>
+            <Input placeholder="DELETE-ALL-EXCEPT-LEGENEX" className="h-8 text-xs font-mono" disabled />
+          </AlertDialogDescription>
+          <div className="flex gap-3 justify-end">
+            <AlertDialogCancel disabled={wipeLoading}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleWipeNonLegenex}
+              disabled={wipeLoading}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              {wipeLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+              Wipe All
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
