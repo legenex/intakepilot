@@ -52,8 +52,8 @@ export default function CallCenter() {
     const query = { organization_id: currentOrg.id };
     if (filter !== 'all') query.qualification_result = filter;
     const [callData, agentData] = await Promise.all([
-      base44.entities.CallLog.filter(query, '-created_date', 100),
-      base44.entities.AIAgent.filter({ organization_id: currentOrg.id }),
+      base44.entities.Call.filter(query, '-created_date', 100),
+      base44.entities.Agent.filter({ organization_id: currentOrg.id }),
     ]);
     setCalls(callData);
     const agentMap = {};

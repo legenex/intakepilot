@@ -29,7 +29,7 @@ export default function LeadCallsTab({ lead, orgId }) {
 
   useEffect(() => {
     if (!lead?.id) return;
-    base44.entities.CallLog.filter({ organization_id: orgId, lead_id: lead.id }, '-created_date', 20)
+    base44.entities.Call.filter({ organization_id: orgId, lead_id: lead.id }, '-created_date', 20)
       .then(data => { setCalls(data); setLoading(false); });
   }, [lead?.id]);
 

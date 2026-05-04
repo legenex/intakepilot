@@ -27,7 +27,7 @@ export default function LeadMessagesTab({ lead, orgId }) {
 
   useEffect(() => {
     if (!lead?.id) return;
-    base44.entities.SMSMessage.filter({ organization_id: orgId, lead_id: lead.id }, 'created_date', 50)
+    base44.entities.Message.filter({ organization_id: orgId, lead_id: lead.id }, 'created_date', 50)
       .then(data => { setMessages(data); setLoading(false); });
   }, [lead?.id]);
 
@@ -46,13 +46,13 @@ export default function LeadMessagesTab({ lead, orgId }) {
   const sendReply = async () => {
     if (!reply.trim()) return;
     setSending(true);
-    const msg = await base44.entities.SMSMessage.create({
+    const msg = await base44.entities.Message.create({
       organization_id: orgId,
       lead_id: lead.id,
       direction: 'outbound',
       body: reply.trim(),
       status: 'sent',
-      sent_at: new Date().toISOString(),
+      delivered_at: new Date().toISOString(),
     });
     await base44.entities.LeadActivity.create({
       organization_id: orgId,

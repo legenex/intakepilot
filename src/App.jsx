@@ -135,8 +135,6 @@ const AuthenticatedApp = () => {
 
         {/* Future stubs */}
         <Route path="/workflows" element={<ComingSoon />} />
-        <Route path="/sms/inbox" element={<Messages />} />
-        <Route path="/sms/campaigns" element={<ComingSoon />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
