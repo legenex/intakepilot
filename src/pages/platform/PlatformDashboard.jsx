@@ -15,8 +15,7 @@ export default function PlatformDashboard() {
   const loadStats = async () => {
     setLoading(true);
     try {
-      const { getPlatformStats } = await import('@/functions/getPlatformStats');
-      const res = await getPlatformStats({});
+      const res = await base44.functions.invoke('getPlatformStats', {});
       if (res.data) {
         setStats(res.data);
       }
