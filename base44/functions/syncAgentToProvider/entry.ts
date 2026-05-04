@@ -31,18 +31,22 @@ Deno.serve(async (req) => {
     const now = new Date().toISOString();
 
     if (agent.provider === 'retell') {
-      const apiKey = cred.credentials.api_key;
-      const agentConfig = {
-        agent_name: agent.name,
-        response_engine: {
-          type: 'retell-llm',
-          llm_id: null
-        },
-        voice_id: agent.voice_id || 'openai-Alloy',
-        begin_message: agent.first_message || null,
-        general_prompt: agent.system_prompt || '',
-        max_call_duration_ms: (agent.max_call_duration_s || 600) * 1000,
-      };
+       const apiKey = cred.credentials.api_key;
+       // Get base URL for webhook
+       const baseUrl = Deno.env.get('BASE44_APP_DOMAIN') || 'https://app.base44.io';
+       const webhookUrl = `${baseUrl}/functions/retellWebhook`;
+       const agentConfig = {
+         agent_name: agent.name,
+         response_engine: {
+           type: 'retell-llm',
+           llm_id: null
+         },
+         voice_id: agent.voice_id || 'openai-Alloy',
+         begin_message: agent.first_message || null,
+         general_prompt: agent.system_prompt || '',
+         max_call_duration_ms: (agent.max_call_duration_s || 600) * 1000,
+         webhook_url: webhookUrl,
+       };
 
       if (agent.provider_agent_id) {
         // Update existing

@@ -4,23 +4,52 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle2, XCircle, Loader2, ExternalLink, Eye, EyeOff, Plug, PlugZap, Unplug } from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, ExternalLink, Eye, EyeOff, Plug, PlugZap, Unplug, Copy, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 const STATUS_CONFIG = {
-  connected: { label: 'Connected', color: 'bg-success/10 text-success border-success/20', icon: CheckCircle2 },
-  error: { label: 'Error', color: 'bg-destructive/10 text-destructive border-destructive/20', icon: XCircle },
-  disconnected: { label: 'Not Connected', color: 'bg-muted text-muted-foreground', icon: Plug }
-};
+   connected: { label: 'Connected', color: 'bg-success/10 text-success border-success/20', icon: CheckCircle2 },
+   error: { label: 'Error', color: 'bg-destructive/10 text-destructive border-destructive/20', icon: XCircle },
+   disconnected: { label: 'Not Connected', color: 'bg-muted text-muted-foreground', icon: Plug }
+ };
+
+function WebhookUrl({ label, url, instruction, copied, setCopied }) {
+   const handleCopy = async () => {
+     await navigator.clipboard.writeText(url);
+     setCopied(url);
+     setTimeout(() => setCopied(null), 2000);
+   };
+
+   return (
+     <div className="space-y-1">
+       <p className="text-xs font-semibold text-muted-foreground">{label}</p>
+       <div className="flex gap-2 items-stretch">
+         <code className="flex-1 px-2 py-1.5 rounded bg-muted border border-border text-xs font-mono text-foreground overflow-x-auto">
+           {url}
+         </code>
+         <Button
+           size="sm"
+           variant="outline"
+           className="h-full text-xs px-2.5 gap-1"
+           onClick={handleCopy}
+         >
+           {copied === url ? <Check className="w-3 h-3 text-success" /> : <Copy className="w-3 h-3" />}
+         </Button>
+       </div>
+       <p className="text-[10px] text-muted-foreground italic">{instruction}</p>
+     </div>
+   );
+ }
 
 export default function ProviderCard({ provider, config, credential, canEdit, onSave, onTest, onDisconnect, extraContent }) {
-  const [expanded, setExpanded] = useState(false);
-  const [formValues, setFormValues] = useState({});
-  const [showValues, setShowValues] = useState({});
-  const [saving, setSaving] = useState(false);
-  const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState(null);
-  const [disconnecting, setDisconnecting] = useState(false);
+   const [expanded, setExpanded] = useState(false);
+   const [formValues, setFormValues] = useState({});
+   const [showValues, setShowValues] = useState({});
+   const [saving, setSaving] = useState(false);
+   const [testing, setTesting] = useState(false);
+   const [testResult, setTestResult] = useState(null);
+   const [disconnecting, setDisconnecting] = useState(false);
+   const [copied, setCopied] = useState(null);
 
   const status = credential?.status || 'disconnected';
   const statusCfg = STATUS_CONFIG[status] || STATUS_CONFIG.disconnected;
@@ -159,21 +188,63 @@ export default function ProviderCard({ provider, config, credential, canEdit, on
         )}
 
         {/* Extra content (e.g., A2P warning) */}
-        {extraContent && status === 'connected' && (
-          <div className="mt-3 border-t border-border pt-3">{extraContent}</div>
-        )}
+         {extraContent && status === 'connected' && (
+           <div className="mt-3 border-t border-border pt-3">{extraContent}</div>
+         )}
 
-        {/* Connected metadata */}
-        {status === 'connected' && credential?.metadata && Object.keys(credential.metadata).length > 0 && (
-          <div className="mt-3 border-t border-border pt-3 flex flex-wrap gap-3">
-            {Object.entries(credential.metadata).map(([k, v]) => (
-              <div key={k} className="text-xs">
-                <span className="text-muted-foreground">{k.replace(/_/g, ' ')}: </span>
-                <span className="font-medium">{String(v)}</span>
-              </div>
-            ))}
-          </div>
-        )}
+         {/* Webhook URLs for connected providers */}
+         {status === 'connected' && ['retell', 'vapi', 'twilio'].includes(provider) && (
+           <div className="mt-3 border-t border-border pt-3 space-y-2">
+             {provider === 'retell' && (
+               <WebhookUrl
+                 label="Webhook URL"
+                 url="https://app.base44.io/functions/retellWebhook"
+                 instruction="Paste this into your Retell agent's webhook_url configuration"
+                 copied={copied}
+                 setCopied={setCopied}
+               />
+             )}
+             {provider === 'vapi' && (
+               <WebhookUrl
+                 label="Webhook URL"
+                 url="https://app.base44.io/functions/vapiWebhook"
+                 instruction="Paste this into Vapi assistant's serverUrl field"
+                 copied={copied}
+                 setCopied={setCopied}
+               />
+             )}
+             {provider === 'twilio' && (
+               <div className="space-y-2">
+                 <WebhookUrl
+                   label="Status Callback URL"
+                   url="https://app.base44.io/functions/twilioStatusWebhook"
+                   instruction="Messaging Configuration → Status Callback URL"
+                   copied={copied}
+                   setCopied={setCopied}
+                 />
+                 <WebhookUrl
+                   label="Inbound Message URL"
+                   url="https://app.base44.io/functions/twilioInboundWebhook"
+                   instruction="Messaging Configuration → Request URL"
+                   copied={copied}
+                   setCopied={setCopied}
+                 />
+               </div>
+             )}
+           </div>
+         )}
+
+         {/* Connected metadata */}
+         {status === 'connected' && credential?.metadata && Object.keys(credential.metadata).length > 0 && (
+           <div className="mt-3 border-t border-border pt-3 flex flex-wrap gap-3">
+             {Object.entries(credential.metadata).map(([k, v]) => (
+               <div key={k} className="text-xs">
+                 <span className="text-muted-foreground">{k.replace(/_/g, ' ')}: </span>
+                 <span className="font-medium">{String(v)}</span>
+               </div>
+             ))}
+           </div>
+         )}
       </CardContent>
     </Card>
   );

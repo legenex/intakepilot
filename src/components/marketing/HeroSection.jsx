@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
+import DemoRequestModal from './DemoRequestModal';
 
 export default function HeroSection() {
+  const [demoOpen, setDemoOpen] = useState(false);
+
   return (
     <section className="relative overflow-hidden">
       {/* Gradient background */}
@@ -42,11 +45,13 @@ export default function HeroSection() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="gap-2">
+            <Button size="lg" variant="outline" className="gap-2" onClick={() => setDemoOpen(true)}>
               <Play className="h-4 w-4" />
               See Live Demo
             </Button>
           </div>
+
+          <DemoRequestModal open={demoOpen} onOpenChange={setDemoOpen} />
 
           <p className="mt-4 text-xs text-muted-foreground">
             14-day free trial · No credit card required · Cancel anytime
