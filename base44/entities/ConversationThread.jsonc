@@ -1,0 +1,47 @@
+{
+  "name": "ConversationThread",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "closed",
+        "handed_off"
+      ],
+      "default": "active"
+    },
+    "last_message_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_message_preview": {
+      "type": "string"
+    },
+    "unread_count": {
+      "type": "number",
+      "default": 0
+    },
+    "handed_off_to": {
+      "type": "string"
+    },
+    "handed_off_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id"
+  ]
+}

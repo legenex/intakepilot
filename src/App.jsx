@@ -37,10 +37,12 @@ import Buyers from '@/pages/Buyers';
 import BuyerDetail from '@/pages/BuyerDetail';
 import Analytics from '@/pages/Analytics';
 import DataSources from '@/pages/DataSources';
-import Agents from '@/pages/Agents';
-import SMSInbox from '@/pages/SMSInbox';
+import AgentLibrary from '@/pages/AgentLibrary';
+import AgentEditor from '@/pages/AgentEditor';
+import Messages from '@/pages/Messages';
 import CallCenter from '@/pages/CallCenter';
-import SMSCampaigns from '@/pages/SMSCampaigns';
+import Integrations from '@/pages/Integrations';
+import ComplianceAudit from '@/pages/ComplianceAudit';
 import ComingSoon from '@/pages/ComingSoon';
 
 // Settings
@@ -119,14 +121,22 @@ const AuthenticatedApp = () => {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/integrations/data-sources" element={<DataSources />} />
 
-        {/* AI Agents & Comms */}
-        <Route path="/agents" element={<Agents />} />
-        <Route path="/sms/inbox" element={<SMSInbox />} />
-        <Route path="/sms/campaigns" element={<SMSCampaigns />} />
+        {/* AI Agents */}
+        <Route path="/agents" element={<AgentLibrary />} />
+        <Route path="/agents/:id" element={<AgentEditor />} />
+
+        {/* Comms */}
+        <Route path="/messages" element={<Messages />} />
         <Route path="/calls" element={<CallCenter />} />
+
+        {/* Integrations & Compliance */}
+        <Route path="/integrations" element={<Integrations />} />
+        <Route path="/admin/compliance" element={<ComplianceAudit />} />
 
         {/* Future stubs */}
         <Route path="/workflows" element={<ComingSoon />} />
+        <Route path="/sms/inbox" element={<Messages />} />
+        <Route path="/sms/campaigns" element={<ComingSoon />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

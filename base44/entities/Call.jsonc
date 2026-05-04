@@ -1,0 +1,122 @@
+{
+  "name": "Call",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "inbound",
+        "outbound"
+      ],
+      "default": "outbound"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "provider_call_id": {
+      "type": "string"
+    },
+    "from_number": {
+      "type": "string"
+    },
+    "to_number": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "ringing",
+        "in_progress",
+        "completed",
+        "failed",
+        "no_answer",
+        "voicemail",
+        "busy"
+      ],
+      "default": "queued"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_s": {
+      "type": "number",
+      "default": 0
+    },
+    "recording_url": {
+      "type": "string"
+    },
+    "transcript": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "summary": {
+      "type": "string"
+    },
+    "structured_data": {
+      "type": "object"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "qualified",
+        "disqualified",
+        "callback_requested",
+        "dnc",
+        "no_answer",
+        "failed",
+        "transferred",
+        "pending"
+      ],
+      "default": "pending"
+    },
+    "pvql_score_after_call": {
+      "type": "number"
+    },
+    "cost_cents": {
+      "type": "number",
+      "default": 0
+    },
+    "latency_p50_ms": {
+      "type": "number"
+    },
+    "latency_p95_ms": {
+      "type": "number"
+    },
+    "compliance_overrides": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "error_code": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "raw_provider_payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id"
+  ]
+}

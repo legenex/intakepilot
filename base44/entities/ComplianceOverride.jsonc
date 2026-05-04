@@ -1,0 +1,39 @@
+{
+  "name": "ComplianceOverride",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "call_id": {
+      "type": "string"
+    },
+    "override_type": {
+      "type": "string"
+    },
+    "override_by": {
+      "type": "string"
+    },
+    "override_by_name": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "checks_overridden": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id",
+    "override_type",
+    "reason"
+  ]
+}

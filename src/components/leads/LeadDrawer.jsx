@@ -17,6 +17,7 @@ import LeadRightRail from './LeadRightRail';
 import DeliverLeadModal from './DeliverLeadModal';
 import LeadCallsTab from './tabs/LeadCallsTab';
 import LeadMessagesTab from './tabs/LeadMessagesTab';
+import CallWithAgentModal from './CallWithAgentModal';
 
 export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdmin }) {
   const { currentOrg } = useOrg();
@@ -24,6 +25,7 @@ export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdm
   const [lead, setLead] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDeliver, setShowDeliver] = useState(false);
+  const [showCallModal, setShowCallModal] = useState(false);
   const [user, setUser] = useState(null);
 
   const loadLead = useCallback(async () => {
@@ -90,8 +92,11 @@ export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdm
           <Button size="sm" variant="outline" className="h-7 text-xs gap-1 text-destructive border-destructive/30" onClick={markDNC} disabled={lead.status === 'dnc'}>
             <AlertOctagon className="w-3 h-3" /> Mark DNC
           </Button>
+          <Button size="sm" variant="outline" className="h-7 text-xs gap-1 text-violet-400 border-violet-400/30" onClick={() => setShowCallModal(true)}>
+            <Phone className="w-3 h-3" /> Call
+          </Button>
           <Button size="sm" variant="outline" className="h-7 text-xs gap-1 text-primary border-primary/30" asChild>
-            <a href={`/sms/inbox`}><MessageSquare className="w-3 h-3" /> SMS</a>
+            <a href={`/messages`}><MessageSquare className="w-3 h-3" /> SMS</a>
           </Button>
         </div>
       )}
@@ -147,6 +152,15 @@ export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdm
           </div>
         </Tabs>
       </div>
+
+      {showCallModal && (
+        <CallWithAgentModal
+          lead={lead}
+          orgId={currentOrg?.id}
+          onClose={() => setShowCallModal(false)}
+          onSuccess={() => { setShowCallModal(false); loadLead(); onRefresh(); }}
+        />
+      )}
 
       {showDeliver && (
         <DeliverLeadModal

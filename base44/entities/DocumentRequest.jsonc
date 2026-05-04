@@ -1,0 +1,54 @@
+{
+  "name": "DocumentRequest",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "requested_by_agent_id": {
+      "type": "string"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "document_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "short_link_token": {
+      "type": "string"
+    },
+    "short_link_expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "opened",
+        "partial",
+        "completed",
+        "expired"
+      ],
+      "default": "sent"
+    },
+    "sms_message_id": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id"
+  ]
+}

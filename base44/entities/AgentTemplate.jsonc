@@ -1,0 +1,52 @@
+{
+  "name": "AgentTemplate",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "voice",
+        "sms",
+        "hybrid"
+      ]
+    },
+    "vertical": {
+      "type": "string"
+    },
+    "system_prompt": {
+      "type": "string"
+    },
+    "first_message": {
+      "type": "string"
+    },
+    "default_tools": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "default_variables": {
+      "type": "object"
+    },
+    "recommended_provider": {
+      "type": "string"
+    },
+    "is_system": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ]
+}

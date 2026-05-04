@@ -1,0 +1,112 @@
+{
+  "name": "Agent",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "voice",
+        "sms",
+        "hybrid"
+      ],
+      "default": "voice"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "retell",
+        "vapi",
+        "twilio"
+      ],
+      "default": "retell"
+    },
+    "provider_agent_id": {
+      "type": "string"
+    },
+    "system_prompt": {
+      "type": "string"
+    },
+    "first_message": {
+      "type": "string"
+    },
+    "voice_id": {
+      "type": "string"
+    },
+    "voice_settings": {
+      "type": "object"
+    },
+    "llm_provider": {
+      "type": "string",
+      "enum": [
+        "anthropic",
+        "openai"
+      ],
+      "default": "anthropic"
+    },
+    "llm_model": {
+      "type": "string",
+      "default": "claude-sonnet-4-5"
+    },
+    "temperature": {
+      "type": "number",
+      "default": 0.7
+    },
+    "max_call_duration_s": {
+      "type": "number",
+      "default": 600
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "dynamic_variables_schema": {
+      "type": "object"
+    },
+    "compliance_settings": {
+      "type": "object"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused"
+      ],
+      "default": "draft"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "last_synced_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_used_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stats_cache": {
+      "type": "object"
+    },
+    "template_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "organization_id",
+    "name",
+    "type"
+  ]
+}

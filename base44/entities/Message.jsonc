@@ -1,0 +1,82 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "inbound",
+        "outbound"
+      ],
+      "default": "outbound"
+    },
+    "provider": {
+      "type": "string",
+      "default": "twilio"
+    },
+    "provider_message_id": {
+      "type": "string"
+    },
+    "from_number": {
+      "type": "string"
+    },
+    "to_number": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "media_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "sent",
+        "delivered",
+        "failed",
+        "received"
+      ],
+      "default": "queued"
+    },
+    "error_code": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "thread_id": {
+      "type": "string"
+    },
+    "agent_handled": {
+      "type": "boolean",
+      "default": false
+    },
+    "delivered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "read_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id",
+    "body"
+  ]
+}

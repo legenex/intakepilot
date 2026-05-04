@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
-import { LayoutDashboard, Settings, Users, CreditCard, HelpCircle, Upload, UserPlus, BarChart3, Briefcase, Zap, Phone, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Settings, Users, CreditCard, HelpCircle, Upload, UserPlus, BarChart3, Briefcase, Zap, Phone, MessageSquare, Shield, PlugZap } from 'lucide-react';
 
 const commandGroups = [
   {
@@ -18,14 +18,16 @@ const commandGroups = [
     label: 'AI Automation',
     commands: [
       { label: 'AI Agents', icon: Zap, href: '/agents' },
+      { label: 'Create Agent', icon: Zap, href: '/agents/new' },
       { label: 'Call Center', icon: Phone, href: '/calls' },
-      { label: 'SMS Inbox', icon: MessageSquare, href: '/sms/inbox' },
-      { label: 'SMS Campaigns', icon: MessageSquare, href: '/sms/campaigns' },
+      { label: 'Messages', icon: MessageSquare, href: '/messages' },
     ],
   },
   {
-    label: 'Settings',
+    label: 'Settings & Compliance',
     commands: [
+      { label: 'Integrations', icon: PlugZap, href: '/integrations' },
+      { label: 'Compliance Audit', icon: Shield, href: '/admin/compliance' },
       { label: 'Organization Settings', icon: Settings, href: '/settings/organization' },
       { label: 'Team Members', icon: UserPlus, href: '/settings/team' },
       { label: 'Billing', icon: CreditCard, href: '/settings/billing' },

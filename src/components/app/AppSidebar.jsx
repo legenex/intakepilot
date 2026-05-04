@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Settings, Users, HelpCircle, LogOut, ChevronDown,
-  Building2, Briefcase, BarChart3, Database, Zap, MessageSquare, Phone
+  Building2, Briefcase, BarChart3, Database, Zap, MessageSquare, Phone,
+  Shield, PlugZap
 } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { useOrg } from '@/lib/OrgContext';
@@ -23,15 +24,16 @@ const NAV_SECTIONS = [
     label: 'AI Automation',
     items: [
       { label: 'Agents', href: '/agents', icon: Zap },
-      { label: 'Call Center', href: '/calls', icon: Phone },
-      { label: 'SMS Inbox', href: '/sms/inbox', icon: MessageSquare },
-      { label: 'SMS Campaigns', href: '/sms/campaigns', icon: MessageSquare },
+      { label: 'Calls', href: '/calls', icon: Phone },
+      { label: 'Messages', href: '/messages', icon: MessageSquare },
     ],
   },
   {
     label: 'Platform',
     items: [
+      { label: 'Integrations', href: '/integrations', icon: PlugZap },
       { label: 'Data Sources', href: '/integrations/data-sources', icon: Database },
+      { label: 'Compliance', href: '/admin/compliance', icon: Shield },
       { label: 'Settings', href: '/settings', icon: Settings },
     ],
   },
