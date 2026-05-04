@@ -31,6 +31,12 @@ import SettingsLayout from '@/components/app/SettingsLayout';
 
 // App pages
 import Dashboard from '@/pages/Dashboard';
+import Leads from '@/pages/Leads';
+import LeadsImport from '@/pages/LeadsImport';
+import Buyers from '@/pages/Buyers';
+import BuyerDetail from '@/pages/BuyerDetail';
+import Analytics from '@/pages/Analytics';
+import DataSources from '@/pages/DataSources';
 import ComingSoon from '@/pages/ComingSoon';
 
 // Settings
@@ -96,12 +102,22 @@ const AuthenticatedApp = () => {
           <Route path="profile" element={<ProfileSettings />} />
         </Route>
 
-        {/* Future feature stubs */}
-        <Route path="/leads" element={<ComingSoon />} />
+        {/* Leads */}
+        <Route path="/leads" element={<Leads />} />
+        <Route path="/leads/import" element={<LeadsImport />} />
+        <Route path="/leads/:id" element={<Leads />} />
+
+        {/* Buyers */}
+        <Route path="/buyers" element={<Buyers />} />
+        <Route path="/buyers/:id" element={<BuyerDetail />} />
+
+        {/* Analytics & Data */}
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/integrations/data-sources" element={<DataSources />} />
+
+        {/* Future stubs */}
         <Route path="/agents" element={<ComingSoon />} />
         <Route path="/workflows" element={<ComingSoon />} />
-        <Route path="/analytics" element={<ComingSoon />} />
-        <Route path="/integrations" element={<ComingSoon />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

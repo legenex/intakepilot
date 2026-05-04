@@ -1,0 +1,54 @@
+{
+  "name": "Document",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "retainer",
+        "id_front",
+        "id_back",
+        "medical_record",
+        "other"
+      ],
+      "default": "other"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "mime_type": {
+      "type": "string"
+    },
+    "size_bytes": {
+      "type": "number"
+    },
+    "uploaded_via": {
+      "type": "string",
+      "enum": [
+        "lead_text",
+        "lead_email",
+        "agent_call",
+        "manual",
+        "api"
+      ],
+      "default": "manual"
+    },
+    "uploaded_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id",
+    "file_url"
+  ]
+}

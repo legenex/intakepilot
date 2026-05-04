@@ -1,0 +1,109 @@
+{
+  "name": "Buyer",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "verticals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "daily_cap": {
+      "type": "number",
+      "default": 10
+    },
+    "current_day_count": {
+      "type": "number",
+      "default": 0
+    },
+    "exclusivity": {
+      "type": "string",
+      "enum": [
+        "exclusive",
+        "shared"
+      ],
+      "default": "shared"
+    },
+    "price_per_pvql": {
+      "type": "number",
+      "default": 0
+    },
+    "price_per_retainer": {
+      "type": "number",
+      "default": 0
+    },
+    "delivery_method": {
+      "type": "string",
+      "enum": [
+        "webhook",
+        "email",
+        "sms",
+        "live_transfer"
+      ],
+      "default": "webhook"
+    },
+    "delivery_config": {
+      "type": "object"
+    },
+    "payment_terms": {
+      "type": "string",
+      "enum": [
+        "prepaid",
+        "net_7",
+        "net_15",
+        "net_30"
+      ],
+      "default": "net_30"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "acceptance_rate": {
+      "type": "number"
+    },
+    "refund_rate": {
+      "type": "number"
+    },
+    "days_to_pay_avg": {
+      "type": "number"
+    },
+    "last_delivery_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_delivered": {
+      "type": "number",
+      "default": 0
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "organization_id",
+    "name"
+  ]
+}

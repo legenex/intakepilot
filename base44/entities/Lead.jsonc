@@ -1,0 +1,167 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "deleted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "raw_form",
+        "dq",
+        "unsold",
+        "returned",
+        "no_contact",
+        "manual_import",
+        "bigquery_sync",
+        "api"
+      ],
+      "default": "manual_import"
+    },
+    "vertical": {
+      "type": "string",
+      "enum": [
+        "auto_mva",
+        "slip_fall",
+        "medmal",
+        "workers_comp",
+        "dog_bite",
+        "mass_tort",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "engaged_sms",
+        "qualified_sms",
+        "phone_verified",
+        "pvql",
+        "retainer_signed",
+        "sold",
+        "disqualified",
+        "dnc"
+      ],
+      "default": "new"
+    },
+    "substatus": {
+      "type": "string"
+    },
+    "incident_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "incident_description": {
+      "type": "string"
+    },
+    "injury_description": {
+      "type": "string"
+    },
+    "medical_treatment": {
+      "type": "boolean"
+    },
+    "at_fault_party": {
+      "type": "string"
+    },
+    "has_attorney": {
+      "type": "boolean"
+    },
+    "tcpa_consent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tcpa_consent_source": {
+      "type": "string"
+    },
+    "pvql_score": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "pvql_verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "assigned_buyer_id": {
+      "type": "string"
+    },
+    "sold_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sale_price": {
+      "type": "number"
+    },
+    "disposition": {
+      "type": "string",
+      "enum": [
+        "sold",
+        "refunded",
+        "unsold",
+        "dnc",
+        "pending"
+      ],
+      "default": "pending"
+    },
+    "buyer_feedback": {
+      "type": "string"
+    },
+    "raw_payload": {
+      "type": "object"
+    },
+    "custom_fields": {
+      "type": "object"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_contacted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contact_attempts": {
+      "type": "number",
+      "default": 0
+    },
+    "assigned_to": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "import_job_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "organization_id",
+    "phone"
+  ]
+}

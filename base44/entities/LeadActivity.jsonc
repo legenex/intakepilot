@@ -1,0 +1,44 @@
+{
+  "name": "LeadActivity",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "sms_sent",
+        "sms_received",
+        "call_made",
+        "call_received",
+        "status_changed",
+        "field_updated",
+        "note_added",
+        "document_uploaded",
+        "webhook_fired",
+        "delivery_sent",
+        "delivery_response",
+        "import",
+        "export"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "actor_label": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id",
+    "type"
+  ]
+}

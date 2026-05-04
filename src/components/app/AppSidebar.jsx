@@ -1,14 +1,17 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Settings, Users, CreditCard, HelpCircle, LogOut, ChevronDown, Building2 } from 'lucide-react';
+import { LayoutDashboard, Settings, Users, HelpCircle, LogOut, ChevronDown, Building2, Briefcase, BarChart3, Database } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { useOrg } from '@/lib/OrgContext';
 import { base44 } from '@/api/base44Client';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const navItems = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Leads', href: '/leads', icon: Users },
+  { label: 'Buyers', href: '/buyers', icon: Briefcase },
+  { label: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { label: 'Data Sources', href: '/integrations/data-sources', icon: Database },
   { label: 'Settings', href: '/settings', icon: Settings },
 ];
 
@@ -49,7 +52,7 @@ export default function AppSidebar({ collapsed, onClose }) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 p-2 space-y-0.5">
+      <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
         {navItems.map(item => {
           const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
           return (

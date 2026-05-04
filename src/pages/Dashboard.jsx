@@ -1,133 +1,183 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useOrg } from '@/lib/OrgContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Users, Phone, DollarSign, BarChart3, CheckCircle, Circle, ArrowRight, MessageSquare, Mic, Upload, Zap } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Users, TrendingUp, Phone, FileSignature, DollarSign, Clock, AlertTriangle, CheckCircle2, ArrowRight, Upload, UserPlus, BarChart3 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { formatCents, STATUS_LABELS, PIPELINE_STAGES, getLeadName } from '@/lib/leadUtils';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
+import PipelineFunnel from '@/components/dashboard/PipelineFunnel';
+import NeedsAttentionPanel from '@/components/dashboard/NeedsAttentionPanel';
+import StatCard from '@/components/dashboard/StatCard';
 
-const checklistItems = [
-  { id: 'twilio', label: 'Connect Twilio', desc: 'Set up your phone numbers for SMS and voice', icon: Phone, href: '/coming-soon' },
-  { id: 'voice', label: 'Connect Voice Provider', desc: 'Configure your AI voice engine', icon: Mic, href: '/coming-soon' },
-  { id: 'agent', label: 'Create First Agent', desc: 'Design your first AI intake agent', icon: Zap, href: '/coming-soon' },
-  { id: 'leads', label: 'Import Leads', desc: 'Upload your existing leads to get started', icon: Upload, href: '/coming-soon' },
+const DATE_RANGES = [
+  { label: 'Today', value: 'today' },
+  { label: '7 Days', value: '7d' },
+  { label: '30 Days', value: '30d' },
 ];
 
-const statCards = [
-  { label: 'Leads Today', value: '—', icon: Users, change: null },
-  { label: 'Calls Today', value: '—', icon: Phone, change: null },
-  { label: 'Revenue', value: '—', icon: DollarSign, change: null },
-  { label: 'Conversion', value: '—', icon: BarChart3, change: null },
+function getDateStart(range) {
+  const now = new Date();
+  if (range === 'today') { const d = new Date(now); d.setHours(0,0,0,0); return d; }
+  if (range === '7d') { const d = new Date(now); d.setDate(d.getDate()-7); return d; }
+  if (range === '30d') { const d = new Date(now); d.setDate(d.getDate()-30); return d; }
+  return new Date(now.setHours(0,0,0,0));
+}
+
+const ONBOARDING_ITEMS = [
+  { key: 'org', label: 'Set up organization', href: '/settings/organization' },
+  { key: 'buyer', label: 'Add your first buyer', href: '/buyers' },
+  { key: 'import', label: 'Import your first leads', href: '/leads/import' },
+  { key: 'deliver', label: 'Deliver a lead to a buyer', href: '/leads' },
 ];
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
   const { currentOrg } = useOrg();
   const navigate = useNavigate();
+  const [range, setRange] = useState('today');
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [onboardingDone, setOnboardingDone] = useState(false);
+  const [completedItems, setCompletedItems] = useState({});
+
+  const loadStats = useCallback(async () => {
+    if (!currentOrg) return;
+    const since = getDateStart(range).toISOString();
+    const [leads, deliveries, buyers] = await Promise.all([
+      base44.entities.Lead.filter({ organization_id: currentOrg.id, deleted_at: null }, '-created_date', 500),
+      base44.entities.LeadDelivery.filter({ organization_id: currentOrg.id }, '-created_date', 200),
+      base44.entities.Buyer.filter({ organization_id: currentOrg.id }),
+    ]);
+
+    const inRange = leads.filter(l => l.created_date >= since);
+    const pvqls = inRange.filter(l => ['pvql','retainer_signed','sold'].includes(l.status));
+    const retainers = inRange.filter(l => ['retainer_signed','sold'].includes(l.status));
+    const sold = inRange.filter(l => l.status === 'sold');
+    const revenue = deliveries
+      .filter(d => d.delivered_at >= since && d.delivery_status === 'accepted')
+      .reduce((s, d) => s + (d.payout || 0), 0);
+
+    setStats({
+      leadsToday: inRange.length,
+      qualifiedToday: inRange.filter(l => ['qualified_sms','phone_verified','pvql','retainer_signed','sold'].includes(l.status)).length,
+      pvqlsToday: pvqls.length,
+      retainersToday: retainers.length,
+      revenueToday: revenue,
+      avgTimeToVerify: null,
+      totalLeads: leads.length,
+      totalBuyers: buyers.length,
+    });
+
+    // Check onboarding
+    const done = {
+      org: !!currentOrg.name,
+      buyer: buyers.length > 0,
+      import: leads.length > 0,
+      deliver: deliveries.length > 0,
+    };
+    setCompletedItems(done);
+    setOnboardingDone(Object.values(done).every(Boolean));
+    setLoading(false);
+  }, [currentOrg, range]);
 
   useEffect(() => {
     base44.auth.me().then(setUser);
   }, []);
 
+  useEffect(() => {
+    loadStats();
+    const interval = setInterval(loadStats, 15000);
+    return () => clearInterval(interval);
+  }, [loadStats]);
+
   if (!currentOrg) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">No Organization Found</h2>
-          <p className="text-muted-foreground mb-4">Let's set up your workspace first.</p>
-          <Button onClick={() => navigate('/onboarding')}>Complete Setup</Button>
-        </div>
+      <div className="p-8 text-center">
+        <p className="text-muted-foreground">No organization found. <Link to="/onboarding" className="text-primary underline">Set one up</Link>.</p>
       </div>
     );
   }
 
-  const firstName = user?.full_name?.split(' ')[0] || 'there';
-
   return (
-    <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
-      {/* Welcome */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold">Welcome back, {firstName}</h1>
-        <p className="text-sm text-muted-foreground mt-1">{currentOrg.name} · {currentOrg.plan ? currentOrg.plan.charAt(0).toUpperCase() + currentOrg.plan.slice(1) : 'Starter'} Plan</p>
-      </motion.div>
+    <div className="p-4 sm:p-6 space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-bold">
+            {user ? `Good ${getGreeting()}, ${user.full_name?.split(' ')[0]}` : 'Dashboard'}
+          </h1>
+          <p className="text-sm text-muted-foreground">{currentOrg.name} · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Select value={range} onValueChange={setRange}>
+            <SelectTrigger className="w-28 h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {DATE_RANGES.map(r => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Button size="sm" onClick={() => navigate('/leads/import')} className="h-8 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
+            <Upload className="w-3.5 h-3.5" /> Import
+          </Button>
+        </div>
+      </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {statCards.map((stat, i) => (
-          <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-            <Card className="border-border">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-muted-foreground font-medium">{stat.label}</span>
-                  <stat.icon className="w-4 h-4 text-muted-foreground" />
-                </div>
-                <div className="text-2xl font-bold font-mono">{stat.value}</div>
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {loading ? Array.from({length:6}).map((_,i) => (
+          <Card key={i}><CardContent className="p-4"><Skeleton className="h-8 w-16 mb-2" /><Skeleton className="h-3 w-24" /></CardContent></Card>
+        )) : (<>
+          <StatCard icon={Users} label="Leads" value={stats.leadsToday} color="text-primary" />
+          <StatCard icon={TrendingUp} label="Qualified" value={stats.qualifiedToday} color="text-blue-400" />
+          <StatCard icon={Phone} label="PVQLs" value={stats.pvqlsToday} color="text-violet-400" />
+          <StatCard icon={FileSignature} label="Retainers" value={stats.retainersToday} color="text-success" />
+          <StatCard icon={DollarSign} label="Revenue" value={formatCents(stats.revenueToday)} color="text-success" raw />
+          <StatCard icon={Clock} label="Avg Verify" value={stats.avgTimeToVerify ? `${stats.avgTimeToVerify}m` : '—'} color="text-muted-foreground" raw />
+        </>)}
+      </div>
+
+      {/* Main grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2 space-y-4">
+          <PipelineFunnel orgId={currentOrg.id} range={range} />
+          <NeedsAttentionPanel orgId={currentOrg.id} />
+        </div>
+        <div className="space-y-4">
+          <ActivityFeed orgId={currentOrg.id} />
+          {!onboardingDone && (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-primary" /> Getting Started
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-1.5 pb-4">
+                {ONBOARDING_ITEMS.map(item => (
+                  <Link key={item.key} to={item.href} className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted transition-colors group">
+                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${completedItems[item.key] ? 'border-success bg-success' : 'border-muted-foreground'}`}>
+                      {completedItems[item.key] && <CheckCircle2 className="w-3 h-3 text-white" />}
+                    </div>
+                    <span className={`text-xs ${completedItems[item.key] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
+                    <ArrowRight className="w-3 h-3 ml-auto text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                ))}
               </CardContent>
             </Card>
-          </motion.div>
-        ))}
+          )}
+        </div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Onboarding checklist */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Getting Started</CardTitle>
-                <Badge variant="secondary" className="text-xs">0/4 completed</Badge>
-              </div>
-              <Progress value={0} className="h-1 mt-2" />
-            </CardHeader>
-            <CardContent className="space-y-1 pt-0">
-              {checklistItems.map(item => (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors group"
-                >
-                  <Circle className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium">{item.label}</div>
-                    <div className="text-xs text-muted-foreground">{item.desc}</div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                </Link>
-              ))}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Empty state */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <Card className="h-full">
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center min-h-[280px]">
-              <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-4">
-                <BarChart3 className="w-6 h-6 text-muted-foreground" />
-              </div>
-              <h3 className="font-semibold mb-1">Your data will appear here</h3>
-              <p className="text-sm text-muted-foreground max-w-xs">
-                Once you connect a source and start processing leads, you'll see real-time analytics here.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Activity feed empty */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent className="py-8 text-center">
-            <p className="text-sm text-muted-foreground">No activity yet. Activity will show up here once you start processing leads.</p>
-          </CardContent>
-        </Card>
-      </motion.div>
     </div>
   );
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'morning';
+  if (h < 17) return 'afternoon';
+  return 'evening';
 }

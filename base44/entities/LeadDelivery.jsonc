@@ -1,0 +1,60 @@
+{
+  "name": "LeadDelivery",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "lead_id": {
+      "type": "string"
+    },
+    "buyer_id": {
+      "type": "string"
+    },
+    "delivered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "delivery_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "accepted",
+        "rejected",
+        "refunded",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "reject_reason": {
+      "type": "string"
+    },
+    "response_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "payout": {
+      "type": "number",
+      "default": 0
+    },
+    "delivery_payload": {
+      "type": "object"
+    },
+    "delivery_response": {
+      "type": "object"
+    },
+    "attempt_count": {
+      "type": "number",
+      "default": 1
+    },
+    "last_error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "organization_id",
+    "lead_id",
+    "buyer_id"
+  ]
+}

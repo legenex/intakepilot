@@ -1,10 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
-import { LayoutDashboard, Settings, Users, CreditCard, HelpCircle } from 'lucide-react';
+import { LayoutDashboard, Settings, Users, CreditCard, HelpCircle, Upload, UserPlus, BarChart3, Briefcase } from 'lucide-react';
 
 const commands = [
   { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
+  { label: 'View Leads', icon: Users, href: '/leads' },
+  { label: 'Import CSV', icon: Upload, href: '/leads/import' },
+  { label: 'Add Buyer', icon: Briefcase, href: '/buyers' },
+  { label: 'Analytics', icon: BarChart3, href: '/analytics' },
   { label: 'Organization Settings', icon: Settings, href: '/settings/organization' },
   { label: 'Team Members', icon: Users, href: '/settings/team' },
   { label: 'Billing', icon: CreditCard, href: '/settings/billing' },

@@ -1,0 +1,77 @@
+{
+  "name": "ImportJob",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "data_source_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "partial"
+      ],
+      "default": "pending"
+    },
+    "total_rows": {
+      "type": "number",
+      "default": 0
+    },
+    "imported_count": {
+      "type": "number",
+      "default": 0
+    },
+    "skipped_count": {
+      "type": "number",
+      "default": 0
+    },
+    "error_count": {
+      "type": "number",
+      "default": 0
+    },
+    "error_log": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "triggered_by": {
+      "type": "string"
+    },
+    "import_source": {
+      "type": "string"
+    },
+    "import_vertical": {
+      "type": "string"
+    },
+    "field_mapping": {
+      "type": "object"
+    },
+    "duplicate_handling": {
+      "type": "string",
+      "enum": [
+        "skip",
+        "update",
+        "create"
+      ],
+      "default": "skip"
+    }
+  },
+  "required": [
+    "organization_id"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "name": "DataSource",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "csv_upload",
+        "bigquery",
+        "postgres",
+        "google_sheets",
+        "api"
+      ]
+    },
+    "connection_config": {
+      "type": "object"
+    },
+    "query_or_table": {
+      "type": "string"
+    },
+    "schedule": {
+      "type": "string"
+    },
+    "field_mapping": {
+      "type": "object"
+    },
+    "last_sync_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_sync_row_count": {
+      "type": "number"
+    },
+    "last_sync_status": {
+      "type": "string"
+    },
+    "last_sync_error": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": false
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "organization_id",
+    "name",
+    "type"
+  ]
+}
