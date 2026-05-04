@@ -82,6 +82,8 @@ export default function AppLayout() {
                    const { stripePortal } = await import('@/functions/stripePortal');
                    const res = await stripePortal({ organization_id: currentOrg.id });
                    if (res.data?.portal_url) window.open(res.data.portal_url, '_blank');
+                 } catch (err) {
+                   console.error('Failed to open portal:', err);
                  } finally {
                    setPortalLoading(false);
                  }

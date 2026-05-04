@@ -49,10 +49,13 @@ export default function BillingSettings() {
     try {
       const { stripePortal } = await import('@/functions/stripePortal');
       const res = await stripePortal({ organization_id: currentOrg.id });
-      if (res.data?.portal_url) {
+      if (res?.data?.portal_url) {
         window.open(res.data.portal_url, '_blank');
+      } else {
+        toast({ title: 'Failed to open portal', variant: 'destructive' });
       }
     } catch (error) {
+      console.error('Portal error:', error);
       toast({ title: 'Error opening portal', variant: 'destructive' });
     } finally {
       setPortalLoading(false);
