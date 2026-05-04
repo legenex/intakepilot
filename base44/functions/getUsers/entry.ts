@@ -5,8 +5,18 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Check if user is super admin
+    const adminGrant = await base44.asServiceRole.entities.SuperAdminGrant.filter({
+      email: user.email.toLowerCase(),
+      active: true,
+    });
+
+    if (adminGrant.length === 0) {
+      return Response.json({ error: 'Forbidden: Super admin access required' }, { status: 403 });
     }
 
     const users = await base44.asServiceRole.entities.User.list('-created_date', 1000);
