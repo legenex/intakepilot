@@ -6,6 +6,7 @@
       "type": "string",
       "enum": [
         "admin",
+        "super_admin",
         "user"
       ],
       "default": "user"
@@ -19,5 +20,6 @@
       ],
       "default": "system"
     }
-  }
+  },
+  "required": []
 }
