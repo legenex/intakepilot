@@ -48,11 +48,18 @@ import ComingSoon from '@/pages/ComingSoon';
 // Platform (Super Admin)
 import PlatformLayout from '@/components/platform/PlatformLayout';
 import PlatformDashboard from '@/pages/platform/PlatformDashboard';
-import PlatformOrganizations from '@/pages/platform/PlatformOrganizations';
-import PlatformOrganizationDetail from '@/pages/platform/PlatformOrganizationDetail';
-import PlatformUsers from '@/pages/platform/PlatformUsers';
-import PlatformUserDetail from '@/pages/platform/PlatformUserDetail';
-import PlatformImpersonation from '@/pages/platform/PlatformImpersonation';
+import PlatformBilling from '@/pages/platform/PlatformBilling';
+import PlatformHealth from '@/pages/platform/PlatformHealth';
+import PlatformSupport from '@/pages/platform/PlatformSupport';
+import PlatformAuditLog from '@/pages/platform/PlatformAuditLog';
+import PlatformAnnouncements from '@/pages/platform/PlatformAnnouncements';
+import PlatformFeatureFlags from '@/pages/platform/PlatformFeatureFlags';
+import PlatformDataTools from '@/pages/platform/PlatformDataTools';
+import PlatformIntegrationsOverview from '@/pages/platform/PlatformIntegrationsOverview';
+import PlatformApiKeys from '@/pages/platform/PlatformApiKeys';
+import PlatformDangerZone from '@/pages/platform/PlatformDangerZone';
+import PlatformWorkflows from '@/pages/platform/PlatformWorkflows';
+import PlatformBigQuery from '@/pages/platform/PlatformBigQuery';
 
 // Settings
 import SettingsRedirect from '@/pages/settings/SettingsRedirect';
@@ -147,14 +154,21 @@ const AuthenticatedApp = () => {
         <Route path="/workflows" element={<ComingSoon />} />
       </Route>
 
-      {/* ── Platform (Super Admin) ── */}
+      {/* Platform (Super Admin) */}
       <Route element={<PlatformLayout />}>
         <Route path="/platform" element={<PlatformDashboard />} />
-        <Route path="/platform/organizations" element={<PlatformOrganizations />} />
-        <Route path="/platform/organizations/:id" element={<PlatformOrganizationDetail />} />
-        <Route path="/platform/users" element={<PlatformUsers />} />
-        <Route path="/platform/users/:id" element={<PlatformUserDetail />} />
-        <Route path="/platform/impersonation" element={<PlatformImpersonation />} />
+        <Route path="/platform/billing" element={<PlatformBilling />} />
+        <Route path="/platform/health" element={<PlatformHealth />} />
+        <Route path="/platform/support" element={<PlatformSupport />} />
+        <Route path="/platform/audit-log" element={<PlatformAuditLog />} />
+        <Route path="/platform/announcements" element={<PlatformAnnouncements />} />
+        <Route path="/platform/feature-flags" element={<PlatformFeatureFlags />} />
+        <Route path="/platform/data-tools" element={<PlatformDataTools />} />
+        <Route path="/platform/integrations-overview" element={<PlatformIntegrationsOverview />} />
+        <Route path="/platform/api-keys" element={<PlatformApiKeys />} />
+        <Route path="/platform/danger-zone" element={<PlatformDangerZone />} />
+        <Route path="/platform/workflows" element={<PlatformWorkflows />} />
+        <Route path="/platform/bigquery" element={<PlatformBigQuery />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

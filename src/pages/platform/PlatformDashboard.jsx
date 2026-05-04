@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Users, Building2, TrendingUp, DollarSign, AlertTriangle } from 'lucide-react';
-
-const STAT_CARDS = [
-  { label: 'Total Orgs', key: 'totalOrgs', icon: Building2, color: 'text-primary' },
-  { label: 'Active Orgs', key: 'activeOrgs', icon: TrendingUp, color: 'text-success' },
-  { label: 'Trialing', key: 'trialingOrgs', icon: Users, color: 'text-accent' },
-  { label: 'Past Due', key: 'pastDueOrgs', icon: AlertTriangle, color: 'text-destructive' },
-  { label: 'Canceled (30d)', key: 'canceledOrgsLastMonth', icon: Users, color: 'text-muted-foreground' },
-  { label: 'Total Users', key: 'totalUsers', icon: Users, color: 'text-primary' },
-  { label: 'MRR', key: 'totalMrr', icon: DollarSign, color: 'text-success', format: 'currency' },
-  { label: 'ARR', key: 'totalArr', icon: DollarSign, color: 'text-success', format: 'currency' },
-];
+import { DollarSign, Users, TrendingUp, AlertTriangle } from 'lucide-react';
 
 export default function PlatformDashboard() {
   const [stats, setStats] = useState(null);
@@ -24,76 +13,110 @@ export default function PlatformDashboard() {
   }, []);
 
   const loadStats = async () => {
+    setLoading(true);
     try {
-      const response = await base44.functions.invoke('getPlatformStats', {});
-      setStats(response.data);
-    } catch (err) {
-      console.error('Failed to load stats:', err);
+      const { getPlatformStats } = await import('@/functions/getPlatformStats');
+      const res = await getPlatformStats({});
+      if (res.data) {
+        setStats(res.data);
+      }
+    } catch (error) {
+      console.error('Stats load error:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  if (loading) return <div className="p-6 space-y-4">{[1,2,3,4].map(i => <Skeleton key={i} className="h-20" />)}</div>;
+
+  if (!stats) return <div className="p-6 text-muted-foreground">Failed to load platform stats</div>;
+
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Platform Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Overview of all organizations and metrics</p>
+        <h1 className="text-3xl font-bold">Platform Dashboard</h1>
+        <p className="text-muted-foreground text-sm mt-1">IntakePilot SaaS Operations Center</p>
       </div>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {STAT_CARDS.map(stat => {
-          const Icon = stat.icon;
-          const value = stats ? stats[stat.key] : null;
-          
-          let displayValue = value;
-          if (stat.format === 'currency' && value !== null) {
-            displayValue = `$${value.toLocaleString()}`;
-          }
-
-          return (
-            <Card key={stat.key}>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <Icon className={`w-4 h-4 ${stat.color}`} />
-                  <span className="text-xs text-muted-foreground">{stat.label}</span>
-                </div>
-                {loading ? (
-                  <Skeleton className="h-6 w-12" />
-                ) : (
-                  <p className="text-2xl font-bold">{displayValue}</p>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Placeholder sections */}
-      <div className="grid grid-cols-3 gap-6">
-        <Card className="col-span-2">
-          <CardHeader>
-            <CardTitle className="text-sm">New Orgs (30d)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-48 flex items-center justify-center text-muted-foreground text-xs">
-              Chart coming in Part B
+      {/* KPI cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold">Monthly Revenue</p>
+                <p className="text-2xl font-bold mt-1">${stats.mrr?.toLocaleString() || '0'}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Annual: ${stats.arr?.toLocaleString() || '0'}</p>
+              </div>
+              <DollarSign className="w-8 h-8 text-primary/20" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xs text-muted-foreground space-y-2">
-              <p>Activity feed coming in Part B</p>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold">Active Organizations</p>
+                <p className="text-2xl font-bold mt-1">{stats.activeOrgs}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">of {stats.totalOrgs} total</p>
+              </div>
+              <Users className="w-8 h-8 text-success/20" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold">Avg Revenue/Account</p>
+                <p className="text-2xl font-bold mt-1">${stats.arpaa}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">per year</p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-primary/20" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className={stats.pastDueOrgs > 0 ? 'border-warning/30 bg-warning/5' : ''}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold">Past Due</p>
+                <p className={`text-2xl font-bold mt-1 ${stats.pastDueOrgs > 0 ? 'text-warning' : ''}`}>
+                  {stats.pastDueOrgs}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">need attention</p>
+              </div>
+              <AlertTriangle className="w-8 h-8 text-warning/20" />
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Quick links */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-semibold">Quick Links</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {[
+            { label: 'View Billing', href: '/platform/billing' },
+            { label: 'Check Health', href: '/platform/health' },
+            { label: 'Support Inbox', href: '/platform/support' },
+            { label: 'Audit Log', href: '/platform/audit-log' },
+          ].map(link => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors text-center text-xs font-medium"
+            >
+              {link.label}
+            </a>
+          ))}
+        </CardContent>
+      </Card>
     </div>
   );
 }

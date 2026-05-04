@@ -5,89 +5,42 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (user?.role !== 'admin') {
+      return Response.json({ error: 'Admin required' }, { status: 403 });
     }
 
-    const userRecords = await base44.asServiceRole.entities.User.filter({
-      id: user.id,
-    });
-
-    if (!userRecords.length || !userRecords[0].super_admin) {
-      return Response.json({ error: 'Not authorized' }, { status: 404 });
-    }
-
-    const now = new Date();
-    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-
-    // Fetch all orgs
-    const allOrgs = await base44.asServiceRole.entities.Organization.filter({}, '-created_date', 10000);
+    // Fetch orgs
+    const orgs = await base44.asServiceRole.entities.Organization.list('-created_date', 10000);
     
-    // Fetch all users
-    const allUsers = await base44.asServiceRole.entities.User.filter({}, '-created_date', 10000);
-
-    // Compute stats
-    const totalOrgs = allOrgs.length;
-    const totalUsers = allUsers.length;
-    
-    // Active orgs (had activity in last 30d)
-    const activeOrgs = allOrgs.filter(o => {
-      const lastActive = o.updated_date ? new Date(o.updated_date) : new Date(o.created_date);
-      return lastActive >= thirtyDaysAgo;
-    }).length;
-
-    const trialingOrgs = allOrgs.filter(o => o.subscription_status === 'trialing').length;
-    const pastDueOrgs = allOrgs.filter(o => o.subscription_status === 'past_due').length;
-    const canceledOrgsLastMonth = allOrgs.filter(o => {
-      if (o.subscription_status !== 'canceled') return false;
-      const canceledAt = o.updated_date ? new Date(o.updated_date) : null;
-      return canceledAt && canceledAt >= thirtyDaysAgo;
-    }).length;
-
-    // Compute MRR
-    const PLAN_PRICES = {
-      starter: { monthly: 297, annual: 3564 },
-      professional: { monthly: 697, annual: 8364 },
-      agency: { monthly: 1497, annual: 17964 },
-    };
-
+    const planPrices = { starter: 297, professional: 597, agency: 997 };
     let totalMrr = 0;
-    allOrgs.forEach(o => {
-      if (o.subscription_status === 'active' || o.subscription_status === 'trialing') {
-        const plan = o.plan || 'starter';
-        const interval = o.plan_interval || 'monthly';
-        const price = PLAN_PRICES[plan]?.[interval] || 0;
-        totalMrr += interval === 'monthly' ? price : price / 12;
+    const mrrByPlan = { starter: 0, professional: 0, agency: 0 };
+    const activeOrgCount = orgs.filter(o => o.subscription_status === 'active').length;
+    const pastDueCount = orgs.filter(o => o.subscription_status === 'past_due').length;
+    const trialingCount = orgs.filter(o => o.subscription_status === 'trialing').length;
+
+    orgs.forEach(org => {
+      if (org.subscription_status === 'active' && org.plan) {
+        const mrr = planPrices[org.plan] || 0;
+        mrrByPlan[org.plan] += mrr;
+        totalMrr += mrr;
       }
     });
 
-    const totalArr = totalMrr * 12;
-
-    // Log the access
-    await base44.asServiceRole.entities.SuperAdminAuditLog.create({
-      user_id: user.id,
-      user_email: user.email,
-      action_type: 'view_audit_log',
-      target_type: 'organization',
-      reason: 'Platform dashboard access',
-      ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-      occurred_at: new Date().toISOString(),
-    });
+    const arr = totalMrr * 12;
+    const arpaa = activeOrgCount > 0 ? Math.round(arr / activeOrgCount) : 0;
 
     return Response.json({
-      totalOrgs,
-      activeOrgs,
-      trialingOrgs,
-      pastDueOrgs,
-      canceledOrgsLastMonth,
-      totalUsers,
-      totalMrr: Math.round(totalMrr * 100) / 100,
-      totalArr: Math.round(totalArr * 100) / 100,
+      mrr: totalMrr,
+      arr,
+      arpaa,
+      mrrByPlan,
+      activeOrgs: activeOrgCount,
+      pastDueOrgs: pastDueCount,
+      trialingOrgs: trialingCount,
+      totalOrgs: orgs.length,
     });
   } catch (error) {
-    console.error('Platform stats error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
