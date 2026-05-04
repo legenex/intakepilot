@@ -1,0 +1,40 @@
+{
+  "name": "BillingUsage",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sms_count": {
+      "type": "number",
+      "default": 0
+    },
+    "voice_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "leads_processed": {
+      "type": "number",
+      "default": 0
+    },
+    "overage_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "finalized_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "organization_id"
+  ]
+}
