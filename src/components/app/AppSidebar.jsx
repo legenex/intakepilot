@@ -10,7 +10,7 @@ import { useOrg } from '@/lib/OrgContext';
 import { base44 } from '@/api/base44Client';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { isSuperAdmin } from '@/lib/superAdmin';
+
 
 const NAV_SECTIONS = [
   {
@@ -52,13 +52,13 @@ export default function AppSidebar({ collapsed, onClose }) {
 
   const checkSuperAdmin = async () => {
     try {
-      const user = await base44.auth.me();
-      const isAdmin = await isSuperAdmin(user);
-      if (isAdmin) {
+      const { superAdminCheck } = await import('@/functions/superAdminCheck');
+      const result = await superAdminCheck({});
+      if (result.data?.is_super_admin) {
         setIsSuperAdmin(true);
       }
     } catch (err) {
-      console.error('Super admin check failed:', err);
+      // Not a super admin, that's fine
     }
   };
 
