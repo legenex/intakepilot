@@ -5,34 +5,26 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user || !user.email) {
+      return Response.json({ is_super_admin: false }, { status: 200 });
     }
 
-    // Fetch full user record including super_admin flag
-    const userRecords = await base44.asServiceRole.entities.User.filter({
-      id: user.id,
+    const emailLower = user.email.toLowerCase();
+
+    const grants = await base44.asServiceRole.entities.SuperAdminGrant.filter({
+      email: emailLower,
+      active: true,
     });
 
-    if (!userRecords.length) {
-      return Response.json({ error: 'User not found' }, { status: 404 });
-    }
+    const isSuperAdmin = grants.length > 0;
 
-    const fullUser = userRecords[0];
-
-    if (!fullUser.super_admin) {
-      // Return 404, not 403 — never reveal these routes exist
-      return Response.json({ error: 'Not Found' }, { status: 404 });
-    }
-
-    // Update last active timestamp
-    await base44.asServiceRole.entities.User.update(user.id, {
-      super_admin_last_active_at: new Date().toISOString(),
-    });
-
-    return Response.json({ user: fullUser, authorized: true });
+    return Response.json({
+      is_super_admin: isSuperAdmin,
+      authorized: isSuperAdmin,
+      user: isSuperAdmin ? user : null,
+    }, { status: 200 });
   } catch (error) {
     console.error('Super admin check error:', error.message);
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ is_super_admin: false, error: error.message }, { status: 200 });
   }
 });
