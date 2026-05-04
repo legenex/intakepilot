@@ -3,16 +3,12 @@
   "type": "object",
   "properties": {
     "organization_id": {
-      "type": "string",
-      "description": "Nullable \u2014 empty for public contact form"
-    },
-    "name": {
       "type": "string"
     },
-    "email": {
+    "customer_email": {
       "type": "string"
     },
-    "company": {
+    "customer_name": {
       "type": "string"
     },
     "subject": {
@@ -21,31 +17,96 @@
     "message": {
       "type": "string"
     },
-    "status": {
-      "type": "string",
-      "enum": [
-        "open",
-        "responded",
-        "closed"
-      ],
-      "default": "open"
-    },
     "priority": {
       "type": "string",
       "enum": [
         "low",
         "medium",
-        "high"
+        "high",
+        "urgent"
       ],
       "default": "medium"
     },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "awaiting_customer",
+        "responded",
+        "closed"
+      ],
+      "default": "open"
+    },
     "assigned_to": {
-      "type": "string"
+      "type": "string",
+      "description": "Super admin user_id this ticket is assigned to"
+    },
+    "thread": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sender_type": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "super_admin"
+            ]
+          },
+          "sender_id": {
+            "type": "string"
+          },
+          "sender_name": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "internal": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, only visible to super admins"
+          }
+        }
+      },
+      "default": []
+    },
+    "internal_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "super_admin_id": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "response_templates_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
     }
   },
   "required": [
-    "name",
-    "email",
+    "organization_id",
+    "customer_email",
+    "subject",
     "message"
   ]
 }

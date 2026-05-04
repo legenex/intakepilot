@@ -1,0 +1,79 @@
+{
+  "name": "Announcement",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "banner",
+        "modal",
+        "email"
+      ],
+      "description": "Announcement display type"
+    },
+    "target_scope": {
+      "type": "string",
+      "enum": [
+        "all",
+        "plans",
+        "orgs",
+        "users"
+      ],
+      "default": "all"
+    },
+    "target_filter": {
+      "type": "object",
+      "description": "JSON object with targeting criteria (plan_ids, org_ids, user_ids)"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ],
+      "default": "info"
+    },
+    "title": {
+      "type": "string"
+    },
+    "message_markdown": {
+      "type": "string"
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ends_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Super admin user_id"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "scheduled",
+        "active",
+        "ended"
+      ],
+      "default": "draft"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0
+    },
+    "dismissal_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "type",
+    "title",
+    "message_markdown"
+  ]
+}

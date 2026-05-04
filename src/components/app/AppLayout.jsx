@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import AppSidebar from './AppSidebar';
 import ThemeToggle from '@/components/shared/ThemeToggle';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X, Search, AlertTriangle, Loader2 } from 'lucide-react';
 import { useOrg } from '@/lib/OrgContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import CommandPalette from '@/components/app/CommandPalette';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 
 export default function AppLayout() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [commandOpen, setCommandOpen] = useState(false);
-  const { loading, currentOrg } = useOrg();
+   const [mobileOpen, setMobileOpen] = useState(false);
+   const [commandOpen, setCommandOpen] = useState(false);
+   const [portalLoading, setPortalLoading] = useState(false);
+   const { loading, currentOrg } = useOrg();
+   const subStatus = useSubscriptionStatus();
+   const navigate = useNavigate();
 
   // Listen for ⌘K
   React.useEffect(() => {
@@ -61,9 +65,45 @@ export default function AppLayout() {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="h-14 border-b border-border flex items-center justify-between px-4 bg-background flex-shrink-0">
+       <div className="flex-1 flex flex-col min-w-0">
+         {/* Subscription status banners */}
+         {subStatus.isPastDue && (
+           <div className="bg-destructive/5 border-b border-destructive/20 px-4 py-2.5 flex items-center justify-between">
+             <div className="flex items-center gap-2">
+               <AlertTriangle className="w-4 h-4 text-destructive" />
+               <p className="text-sm font-medium text-destructive">Payment failed. Update your payment method to keep your account active.</p>
+             </div>
+             <Button
+               size="sm"
+               variant="outline"
+               onClick={async () => {
+                 setPortalLoading(true);
+                 try {
+                   const { stripePortal } = await import('@/functions/stripePortal');
+                   const res = await stripePortal({ organization_id: currentOrg.id });
+                   if (res.data?.portal_url) window.open(res.data.portal_url, '_blank');
+                 } finally {
+                   setPortalLoading(false);
+                 }
+               }}
+               disabled={portalLoading}
+               className="h-8 text-xs"
+             >
+               {portalLoading && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
+               Update Payment
+             </Button>
+           </div>
+         )}
+         {subStatus.isTrialing && subStatus.daysUntilTrialEnd !== null && subStatus.daysUntilTrialEnd <= 3 && (
+           <div className="bg-warning/5 border-b border-warning/20 px-4 py-2.5">
+             <p className="text-sm text-warning">
+               Your trial ends in <span className="font-semibold">{subStatus.daysUntilTrialEnd} days</span>. Add a payment method to continue after trial.
+             </p>
+           </div>
+         )}
+
+         {/* Top bar */}
+         <header className="h-14 border-b border-border flex items-center justify-between px-4 bg-background flex-shrink-0">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen(true)}>
               <Menu className="w-5 h-5" />

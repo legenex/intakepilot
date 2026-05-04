@@ -1,0 +1,46 @@
+{
+  "name": "PlatformApiKey",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "prefix": {
+      "type": "string",
+      "description": "Visible prefix of the key (first 8 chars)"
+    },
+    "hashed_secret": {
+      "type": "string",
+      "description": "Hashed full secret, never returned to UI after creation"
+    },
+    "scopes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of scope strings: read_orgs, read_users, write_announcements, etc"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Super admin user_id"
+    },
+    "last_used_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name",
+    "prefix",
+    "hashed_secret",
+    "scopes"
+  ]
+}

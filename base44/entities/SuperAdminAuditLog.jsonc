@@ -1,0 +1,86 @@
+{
+  "name": "SuperAdminAuditLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The super admin who took the action"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "view_org",
+        "edit_org",
+        "impersonate_start",
+        "impersonate_end",
+        "grant_super_admin",
+        "revoke_super_admin",
+        "force_logout_user",
+        "force_logout_all",
+        "pause_org",
+        "resume_org",
+        "view_lead",
+        "view_call_recording",
+        "view_audit_log",
+        "apply_credit",
+        "extend_trial",
+        "change_plan",
+        "comp_account"
+      ]
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "organization",
+        "user",
+        "lead",
+        "call",
+        "message",
+        "billing"
+      ]
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "target_organization_id": {
+      "type": "string"
+    },
+    "before_state": {
+      "type": "object",
+      "description": "Snapshot before change (for edit actions)"
+    },
+    "after_state": {
+      "type": "object",
+      "description": "Snapshot after change"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why this action was taken (required for sensitive actions)"
+    },
+    "ip_address": {
+      "type": "string"
+    },
+    "user_agent": {
+      "type": "string"
+    },
+    "impersonating": {
+      "type": "boolean",
+      "default": false
+    },
+    "impersonated_user_id": {
+      "type": "string"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "action_type",
+    "target_type"
+  ]
+}

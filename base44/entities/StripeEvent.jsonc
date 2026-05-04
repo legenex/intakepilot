@@ -1,0 +1,29 @@
+{
+  "name": "StripeEvent",
+  "type": "object",
+  "properties": {
+    "stripe_event_id": {
+      "type": "string",
+      "description": "The Stripe event ID"
+    },
+    "type": {
+      "type": "string",
+      "description": "Event type (e.g. checkout.session.completed)"
+    },
+    "organization_id": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Full event payload from Stripe"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "stripe_event_id",
+    "type"
+  ]
+}

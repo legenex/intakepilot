@@ -21,17 +21,13 @@
       "type": "number",
       "default": 0
     },
-    "leads_processed": {
+    "sms_overage_charge": {
       "type": "number",
       "default": 0
     },
-    "overage_amount": {
+    "voice_overage_charge": {
       "type": "number",
       "default": 0
-    },
-    "finalized_at": {
-      "type": "string",
-      "format": "date-time"
     }
   },
   "required": [

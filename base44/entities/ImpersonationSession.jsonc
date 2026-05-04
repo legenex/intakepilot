@@ -1,0 +1,50 @@
+{
+  "name": "ImpersonationSession",
+  "type": "object",
+  "properties": {
+    "super_admin_user_id": {
+      "type": "string"
+    },
+    "target_user_id": {
+      "type": "string"
+    },
+    "target_organization_id": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "ended_reason": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "timeout",
+        "logout",
+        "forced"
+      ]
+    },
+    "audit_log_entry_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "super_admin_user_id",
+    "target_user_id",
+    "target_organization_id",
+    "started_at",
+    "duration_minutes",
+    "reason"
+  ]
+}

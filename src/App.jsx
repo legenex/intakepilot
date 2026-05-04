@@ -45,6 +45,15 @@ import Integrations from '@/pages/Integrations';
 import ComplianceAudit from '@/pages/ComplianceAudit';
 import ComingSoon from '@/pages/ComingSoon';
 
+// Platform (Super Admin)
+import PlatformLayout from '@/components/platform/PlatformLayout';
+import PlatformDashboard from '@/pages/platform/PlatformDashboard';
+import PlatformOrganizations from '@/pages/platform/PlatformOrganizations';
+import PlatformOrganizationDetail from '@/pages/platform/PlatformOrganizationDetail';
+import PlatformUsers from '@/pages/platform/PlatformUsers';
+import PlatformUserDetail from '@/pages/platform/PlatformUserDetail';
+import PlatformImpersonation from '@/pages/platform/PlatformImpersonation';
+
 // Settings
 import SettingsRedirect from '@/pages/settings/SettingsRedirect';
 import OrganizationSettings from '@/pages/settings/OrganizationSettings';
@@ -136,6 +145,16 @@ const AuthenticatedApp = () => {
 
         {/* Future stubs */}
         <Route path="/workflows" element={<ComingSoon />} />
+      </Route>
+
+      {/* ── Platform (Super Admin) ── */}
+      <Route element={<PlatformLayout />}>
+        <Route path="/platform" element={<PlatformDashboard />} />
+        <Route path="/platform/organizations" element={<PlatformOrganizations />} />
+        <Route path="/platform/organizations/:id" element={<PlatformOrganizationDetail />} />
+        <Route path="/platform/users" element={<PlatformUsers />} />
+        <Route path="/platform/users/:id" element={<PlatformUserDetail />} />
+        <Route path="/platform/impersonation" element={<PlatformImpersonation />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

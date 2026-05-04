@@ -7,13 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PROVIDER_CONFIG } from '@/lib/providerUtils';
 import ProviderCard from '@/components/integrations/ProviderCard';
-import { Phone, MessageSquare, Mic, Zap, AlertTriangle } from 'lucide-react';
+import { Phone, MessageSquare, Mic, Zap, AlertTriangle, CreditCard } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 const PROVIDERS_ORDER = ['retell', 'vapi', 'twilio', 'elevenlabs'];
 
 export default function Integrations() {
-  const { currentOrg, membership } = useOrg();
-  const [credentials, setCredentials] = useState({});
+   const { currentOrg, membership } = useOrg();
+   const { toast } = useToast();
+   const [credentials, setCredentials] = useState({});
   const [loading, setLoading] = useState(true);
 
   const canAdmin = ['owner', 'admin'].includes(membership?.role);
@@ -86,8 +88,8 @@ export default function Integrations() {
   return (
     <div className="p-4 sm:p-6 space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-xl font-bold">Voice & SMS Integrations</h1>
-        <p className="text-sm text-muted-foreground">Connect your voice and messaging providers to enable AI agent execution</p>
+        <h1 className="text-xl font-bold">Integrations</h1>
+        <p className="text-sm text-muted-foreground">Connect providers to enable voice, SMS, and payment processing</p>
       </div>
 
       {/* Status banner */}
@@ -155,7 +157,7 @@ export default function Integrations() {
 
         <div className="flex items-center gap-2 mt-6 mb-1">
           <Mic className="w-4 h-4 text-muted-foreground" />
-          <h2 className="text-sm font-semibold">TTS / Voice Library</h2>
+          <h2 className="text-sm font-semibold">Voice Library (TTS)</h2>
           <p className="text-xs text-muted-foreground">(optional — for custom voices)</p>
         </div>
 
@@ -170,6 +172,55 @@ export default function Integrations() {
             onTest={(creds) => handleTestConnection('elevenlabs', creds)}
             onDisconnect={() => handleDisconnect('elevenlabs')}
           />
+        )}
+
+        <div className="flex items-center gap-2 mt-6 mb-1">
+          <CreditCard className="w-4 h-4 text-muted-foreground" />
+          <h2 className="text-sm font-semibold">Payments</h2>
+        </div>
+
+        {loading ? <Skeleton className="h-40 rounded-xl" /> : (
+          <Card className="border border-border">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                  <CreditCard className="w-5 h-5 text-purple-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap mb-2">
+                    <span className="font-semibold text-sm">Stripe</span>
+                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                      Configured
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Payment processing for subscriptions and invoicing</p>
+                </div>
+              </div>
+
+              <div className="mt-4 p-3 rounded-lg border border-border bg-muted/30 space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground">Webhook URL:</p>
+                <div className="flex gap-2 items-stretch">
+                  <code className="flex-1 px-2 py-1.5 rounded bg-background border border-border text-xs font-mono text-foreground overflow-x-auto">
+                    https://app.base44.io/functions/stripeWebhook
+                  </code>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-full text-xs px-2.5"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText('https://app.base44.io/functions/stripeWebhook');
+                      toast({ title: 'Webhook URL copied to clipboard' });
+                    }}
+                  >
+                    Copy
+                  </Button>
+                </div>
+                <p className="text-[10px] text-muted-foreground italic">
+                  Paste into Stripe Dashboard → Developers → Webhooks. Subscribe to: checkout.session.completed, customer.subscription.*, invoice.paid, invoice.payment_failed
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

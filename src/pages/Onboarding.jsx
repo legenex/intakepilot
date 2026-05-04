@@ -18,10 +18,10 @@ const verticals = [
 ];
 
 const plans = [
-  { value: 'starter', label: 'Starter', price: '$297/mo', desc: '500 SMS · 200 voice mins · 2 agents' },
-  { value: 'professional', label: 'Professional', price: '$797/mo', desc: '2,500 SMS · 1,500 voice mins · 10 agents', popular: true },
-  { value: 'agency', label: 'Agency', price: '$1,997/mo', desc: '10,000 SMS · 7,500 voice mins · Unlimited agents' },
-];
+   { value: 'starter', label: 'Starter', price: '$297/mo', desc: '500 SMS · 200 voice mins · 2 agents' },
+   { value: 'professional', label: 'Professional', price: '$597/mo', desc: '2,500 SMS · 1,500 voice mins · 10 agents', popular: true },
+   { value: 'agency', label: 'Agency', price: '$997/mo', desc: '10,000 SMS · 7,500 voice mins · Unlimited agents' },
+ ];
 
 export default function Onboarding() {
   const [step, setStep] = useState(0);
@@ -47,37 +47,56 @@ export default function Onboarding() {
   }, []);
 
   const createOrganization = async () => {
-    setLoading(true);
-    const slug = orgName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const trialEnd = new Date();
-    trialEnd.setDate(trialEnd.getDate() + 14);
-    
-    const org = await base44.entities.Organization.create({
-      name: orgName,
-      slug,
-      vertical,
-      subscription_status: 'trialing',
-      plan: selectedPlan,
-      plan_interval: 'monthly',
-      trial_ends_at: trialEnd.toISOString(),
-      onboarding_completed: true,
-    });
+     setLoading(true);
+     const slug = orgName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+     const trialEnd = new Date();
+     trialEnd.setDate(trialEnd.getDate() + 14);
 
-    await base44.entities.OrganizationMember.create({
-      organization_id: org.id,
-      user_email: user.email,
-      user_name: user.full_name,
-      role: 'owner',
-      status: 'active',
-      joined_at: new Date().toISOString(),
-    });
+     try {
+       const org = await base44.entities.Organization.create({
+         name: orgName,
+         slug,
+         vertical,
+         subscription_status: 'trialing',
+         plan: selectedPlan,
+         plan_interval: 'monthly',
+         trial_ends_at: trialEnd.toISOString(),
+         onboarding_completed: true,
+       });
 
-    await base44.auth.updateMe({ current_organization_id: org.id });
-    localStorage.setItem('intakepilot-current-org', org.id);
-    
-    setLoading(false);
-    setStep(3);
-  };
+       await base44.entities.OrganizationMember.create({
+         organization_id: org.id,
+         user_email: user.email,
+         user_name: user.full_name,
+         role: 'owner',
+         status: 'active',
+         joined_at: new Date().toISOString(),
+       });
+
+       await base44.auth.updateMe({ current_organization_id: org.id });
+       localStorage.setItem('intakepilot-current-org', org.id);
+
+       // Initiate Stripe checkout
+       const { stripeCheckout } = await import('@/functions/stripeCheckout');
+       const checkoutRes = await stripeCheckout({
+         plan: selectedPlan,
+         interval: 'monthly',
+         organization_id: org.id,
+       });
+
+       if (checkoutRes.data?.checkout_url) {
+         window.location.href = checkoutRes.data.checkout_url;
+       } else {
+         toast({ title: 'Stripe not configured. Trial mode activated.', description: 'Contact support to enable payments.' });
+         setStep(3);
+       }
+     } catch (error) {
+       console.error('Onboarding error:', error);
+       toast({ title: 'Error creating organization', variant: 'destructive' });
+     } finally {
+       setLoading(false);
+     }
+   };
 
   const stepContent = [
     // Step 0: Welcome
@@ -139,9 +158,9 @@ export default function Onboarding() {
     </motion.div>,
 
     // Step 2: Plan
-    <motion.div key="plan" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-      <h2 className="text-2xl font-bold mb-1">Choose your plan</h2>
-      <p className="text-muted-foreground mb-6 text-sm">Start with a 14-day free trial. No card required.</p>
+     <motion.div key="plan" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+       <h2 className="text-2xl font-bold mb-1">Choose your plan</h2>
+       <p className="text-muted-foreground mb-6 text-sm">14-day free trial. Card required upfront but won't be charged until trial ends.</p>
       <div className="space-y-2">
         {plans.map(p => (
           <button
