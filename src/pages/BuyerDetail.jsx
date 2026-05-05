@@ -29,13 +29,16 @@ export default function BuyerDetail() {
   const canAdmin = ['owner', 'admin'].includes(membership?.role);
 
   const load = async () => {
-    const [b, dels] = await Promise.all([
-      base44.entities.Buyer.get(id),
-      base44.entities.LeadDelivery.filter({ buyer_id: id, organization_id: currentOrg?.id }, '-created_date', 100),
-    ]);
-    setBuyer(b);
-    setDeliveries(dels);
-    setLoading(false);
+    try {
+      const [buyers, dels] = await Promise.all([
+        base44.entities.Buyer.filter({ id }),
+        base44.entities.LeadDelivery.filter({ buyer_id: id, organization_id: currentOrg?.id }, '-created_date', 100),
+      ]);
+      setBuyer(buyers[0] || null);
+      setDeliveries(dels);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { if (currentOrg && id) load(); }, [id, currentOrg]);

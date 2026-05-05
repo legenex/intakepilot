@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { AlertTriangle, Shield, Loader2, Zap } from 'lucide-react';
+import { AlertTriangle, Shield, Loader2, Zap, Trash2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import {
   AlertDialog,
@@ -24,6 +24,8 @@ export default function PlatformDangerZone() {
   const [loading, setLoading] = useState(false);
   const [wipeConfirm, setWipeConfirm] = useState(false);
   const [wipeLoading, setWipeLoading] = useState(false);
+  const [cleanupLoading, setCleanupLoading] = useState(false);
+  const [cleanupReport, setCleanupReport] = useState(null);
 
   useEffect(() => {
     loadOrgs();
@@ -82,6 +84,24 @@ export default function PlatformDangerZone() {
     });
 
     loadOrgs();
+  };
+
+  const handleCleanupStaleMembers = async () => {
+    setCleanupLoading(true);
+    setCleanupReport(null);
+    try {
+      const result = await base44.functions.invoke('cleanupStaleMembers', {});
+      const report = result.data;
+      setCleanupReport(report);
+      toast({
+        title: 'Cleanup complete',
+        description: `Checked ${report.checked} memberships. Removed ${report.removed} stale records.`,
+      });
+    } catch (err) {
+      toast({ title: 'Cleanup failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setCleanupLoading(false);
+    }
   };
 
   const handleWipeNonLegenex = async () => {
@@ -193,6 +213,45 @@ export default function PlatformDangerZone() {
                 {loading ? 'Processing...' : 'Mark for Deletion (7-day grace)'}
               </Button>
             </>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Clean up stale memberships */}
+      <Card className="border-warning/30">
+        <CardHeader>
+          <CardTitle className="text-sm font-semibold">Clean Up Stale Memberships</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-xs text-muted-foreground mb-3">
+            Removes <code>OrganizationMember</code> records that reference organizations which no longer exist.
+            Safe to run at any time. Fixes the Axios 404 errors on page load for affected users.
+          </p>
+          <Button
+            variant="outline"
+            onClick={handleCleanupStaleMembers}
+            disabled={cleanupLoading}
+            className="text-xs gap-2"
+          >
+            {cleanupLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+            Clean Up Stale Memberships
+          </Button>
+          {cleanupReport && (
+            <div className="mt-3 p-3 rounded-lg bg-muted/40 text-xs space-y-1">
+              <p><span className="font-semibold">Checked:</span> {cleanupReport.checked}</p>
+              <p><span className="font-semibold">Removed:</span> {cleanupReport.removed}</p>
+              <p><span className="font-semibold">Kept:</span> {cleanupReport.kept}</p>
+              {cleanupReport.stale_details?.length > 0 && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-muted-foreground">Show removed records ({cleanupReport.stale_details.length})</summary>
+                  <ul className="mt-1 space-y-0.5 font-mono text-[10px] text-muted-foreground">
+                    {cleanupReport.stale_details.map(d => (
+                      <li key={d.id}>{d.user_email} → org:{d.organization_id.slice(-8)}</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </div>
           )}
         </CardContent>
       </Card>

@@ -100,6 +100,16 @@ export const AuthProvider = ({ children }) => {
           console.error('Failed to seed super admins:', err);
         }
       }
+
+      // Clean up stale OrganizationMember records once per session (super admins only)
+      if (currentUser.role === 'admin' && !localStorage.getItem('intakepilot-stale-members-cleaned')) {
+        try {
+          await base44.functions.invoke('cleanupStaleMembers', {});
+          localStorage.setItem('intakepilot-stale-members-cleaned', 'true');
+        } catch (_) {
+          // Non-critical — silently skip
+        }
+      }
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);

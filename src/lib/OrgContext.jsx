@@ -24,15 +24,17 @@ export function OrgProvider({ children }) {
         return;
       }
 
+      // Use filter() per org ID instead of get() — filter returns [] on miss, get() throws 404
+      const orgIds = memberships.map(m => m.organization_id);
       const userOrgs = [];
-      for (const m of memberships) {
+      for (const orgId of orgIds) {
         try {
-          const org = await base44.entities.Organization.get(m.organization_id);
-          if (org && !org.soft_delete_at) {
-            userOrgs.push(org);
+          const matches = await base44.entities.Organization.filter({ id: orgId });
+          if (matches.length > 0 && !matches[0].soft_delete_at) {
+            userOrgs.push(matches[0]);
           }
         } catch (err) {
-          // Silently skip inaccessible orgs
+          console.warn(`Could not fetch org ${orgId}:`, err?.message);
         }
       }
       
