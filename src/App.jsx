@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -84,10 +85,18 @@ import BillingSettings from '@/pages/settings/BillingSettings';
 import BrandingSettings from '@/pages/settings/BrandingSettings';
 import ProfileSettings from '@/pages/settings/ProfileSettings';
 
+// ── AuthenticatedApp — only handles authenticated routes ──────────────────────
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
 
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  // Safety timeout: if auth hangs beyond 8s, fall through to render routes
+  const [forceReady, setForceReady] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setForceReady(true), 8000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if ((isLoadingPublicSettings || isLoadingAuth) && !forceReady) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
@@ -99,40 +108,13 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
+      return <Navigate to="/signin" replace />;
     }
   }
 
   return (
     <Routes>
-      {/* ── Marketing (public) ── */}
-      <Route element={<MarketingLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/features" element={<Features />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/use-cases" element={<UseCases />} />
-        <Route path="/use-cases/pi-firms" element={<UseCasesPiFirms />} />
-        <Route path="/use-cases/lead-gen-agencies" element={<UseCasesLeadGen />} />
-        <Route path="/use-cases/aggregators" element={<UseCasesAggregators />} />
-        <Route path="/problem" element={<Problem />} />
-        <Route path="/tech" element={<Tech />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/faq" element={<Faq />} />
-        <Route path="/legal/tcpa" element={<LegalTcpa />} />
-        <Route path="/legal/privacy" element={<LegalPrivacy />} />
-        <Route path="/legal/terms" element={<LegalTerms />} />
-      </Route>
-
-      {/* ── Auth ── */}
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/login" element={<Navigate to="/signin" replace />} />
-      <Route path="/signup" element={<StartTrial />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-
-      {/* ── App (authenticated) ── */}
+      {/* App (authenticated) */}
       <Route element={<AppLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
 
@@ -204,19 +186,67 @@ const AuthenticatedApp = () => {
   );
 };
 
+// ── AuthOnlyShell — for signin/signup/onboarding (no OrgProvider) ─────────────
+function AuthOnlyShell({ children }) {
+  return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClientInstance}>
+        {children}
+      </QueryClientProvider>
+    </AuthProvider>
+  );
+}
+
+// ── AuthenticatedShell — full provider stack for app routes ──────────────────
+function AuthenticatedShell() {
+  return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClientInstance}>
+        <OrgProvider>
+          <AuthenticatedApp />
+        </OrgProvider>
+      </QueryClientProvider>
+    </AuthProvider>
+  );
+}
+
+// ── Root App — marketing renders with zero providers ─────────────────────────
 function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <QueryClientProvider client={queryClientInstance}>
-          <OrgProvider>
-            <Router>
-              <AuthenticatedApp />
-            </Router>
-            <Toaster />
-          </OrgProvider>
-        </QueryClientProvider>
-      </AuthProvider>
+      <Router>
+        <Routes>
+          {/* ── Public Marketing Routes (NO auth, NO org context) ── */}
+          <Route element={<MarketingLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/use-cases" element={<UseCases />} />
+            <Route path="/use-cases/pi-firms" element={<UseCasesPiFirms />} />
+            <Route path="/use-cases/lead-gen-agencies" element={<UseCasesLeadGen />} />
+            <Route path="/use-cases/aggregators" element={<UseCasesAggregators />} />
+            <Route path="/problem" element={<Problem />} />
+            <Route path="/tech" element={<Tech />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/faq" element={<Faq />} />
+            <Route path="/legal/tcpa" element={<LegalTcpa />} />
+            <Route path="/legal/privacy" element={<LegalPrivacy />} />
+            <Route path="/legal/terms" element={<LegalTerms />} />
+          </Route>
+
+          {/* ── Auth Routes (AuthProvider only, no OrgProvider) ── */}
+          <Route path="/signin" element={<AuthOnlyShell><SignIn /></AuthOnlyShell>} />
+          <Route path="/login" element={<Navigate to="/signin" replace />} />
+          <Route path="/signup" element={<AuthOnlyShell><StartTrial /></AuthOnlyShell>} />
+          <Route path="/onboarding" element={<AuthOnlyShell><Onboarding /></AuthOnlyShell>} />
+
+          {/* ── Authenticated App (full provider stack) ── */}
+          <Route path="/*" element={<AuthenticatedShell />} />
+        </Routes>
+        <Toaster />
+      </Router>
     </ThemeProvider>
   );
 }
