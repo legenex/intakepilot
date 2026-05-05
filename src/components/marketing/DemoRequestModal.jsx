@@ -17,21 +17,18 @@ export default function DemoRequestModal({ open, onOpenChange }) {
     if (!email.trim()) return;
 
     setLoading(true);
-    try {
-      await base44.integrations.Core.SendEmail({
-        to: 'hello@legenex.com',
-        subject: 'New Demo Request',
-        body: `A demo was requested from the marketing site.\n\nEmail: ${email}`,
-      });
-      toast({ title: 'Demo request submitted! We\'ll be in touch soon.' });
-      setEmail('');
-      onOpenChange(false);
-    } catch (err) {
-      console.error('Failed to submit demo request:', err);
-      toast({ title: 'Error submitting request', variant: 'destructive' });
-    } finally {
-      setLoading(false);
-    }
+    await base44.entities.SupportTicket.create({
+      customer_email: email,
+      customer_name: 'Demo Request',
+      organization_id: 'public',
+      subject: 'New Demo Request',
+      message: `A demo was requested from the marketing site.\n\nEmail: ${email}`,
+      status: 'open',
+    });
+    toast({ title: "Demo request submitted! We'll be in touch soon." });
+    setEmail('');
+    onOpenChange(false);
+    setLoading(false);
   };
 
   return (
