@@ -62,7 +62,7 @@ export default function Home() {
   return (
     <div>
       {/* ── HERO (existing AI Mindmap visualization) ─────────── */}
-      <section style={{ paddingTop: '4rem', paddingBottom: '2rem' }}>
+      <section className="hero-mobile-spacing" style={{ paddingTop: '4rem', paddingBottom: '2rem' }}>
         <div className="site-container" style={{ textAlign: 'center', marginBottom: '1rem' }}>
           <div className="section-eyebrow" style={{ justifyContent: 'center' }}>AI-POWERED LEGAL INTAKE</div>
           <h1 className="site-h1" style={{ marginBottom: '1.25rem' }}>
@@ -73,7 +73,7 @@ export default function Home() {
             IntakePilot works across every lead state — raw, disqualified, no-contact, unsold.
             The AI doesn't clock out. Neither does your pipeline.
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="hero-cta-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <Link to="/signup" className="btn btn-primary">Start Free Trial</Link>
             <Link to="/how-it-works" className="btn btn-secondary">See How It Works</Link>
           </div>
@@ -114,7 +114,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid-3" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
+          <div className="site-grid-3">
             {[
               { num: '78%', label: 'of inbound legal leads never get a callback within 5 minutes', source: 'INDUSTRY BENCHMARK · 2025' },
               { num: '$340K', label: 'average annual cost of unqualified leads at a 5-attorney PI firm', source: 'INTAKEPILOT INTERNAL DATA' },
@@ -148,7 +148,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid-3" style={{ alignItems: 'stretch' }}>
+          <div className="site-grid-3" style={{ alignItems: 'stretch' }}>
             {[
               {
                 layer: 'LAYER 01',
@@ -201,7 +201,7 @@ export default function Home() {
             <h2 className="site-h2">Everything intake. Nothing extraneous.</h2>
           </div>
 
-          <div className="grid-4-2-1">
+          <div className="site-grid-4">
             {FEATURES.map((f, i) => (
               <Link key={i} to={`/features${f.anchor}`} className="feature-card reveal" data-delay={i % 4}>
                 <div className="feature-card-icon">
@@ -218,7 +218,7 @@ export default function Home() {
       {/* ── REACTIVATION STORY ────────────────────────────────── */}
       <section className="site-section reactivation-section">
         <div className="site-container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+          <div className="site-grid-2" style={{ gap: '4rem', alignItems: 'center' }}>
             {/* Left: animated diagram */}
             <div className="reveal">
               <div className="section-eyebrow section-eyebrow-amber">The Reactivation Engine</div>
@@ -251,7 +251,7 @@ export default function Home() {
                 { num: '$0.94', label: 'average cost per recovered PVQL' },
               ].map((s, i) => (
                 <div key={i} className="stat-card stat-card-amber reveal" data-delay={i}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
+                  <div className="reactivation-stat-row" style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
                     <span className="stat-number stat-number-amber">{s.num}</span>
                     <span className="stat-label" style={{ margin: 0 }}>{s.label}</span>
                   </div>
@@ -279,7 +279,7 @@ export default function Home() {
             <h2 className="site-h2">Built for operators who measure everything.</h2>
           </div>
 
-          <div className="grid-3">
+          <div className="site-grid-3">
             {TESTIMONIALS.map((t, i) => (
               <div key={i} className="testimonial-card reveal" data-delay={i}>
                 <p className="testimonial-quote">{t.quote}</p>

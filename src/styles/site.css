@@ -774,3 +774,159 @@
 .mob-pill .ico svg { width: 18px; height: 18px; fill: none; stroke: var(--accent-primary); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .mob-section.reactivation .mob-pill .ico { background: rgba(245, 158, 11, 0.10); }
 .mob-section.reactivation .mob-pill .ico svg { stroke: var(--accent-amber); }
+
+/* ============ Responsive Grid Utilities ============ */
+.site-grid-3 {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+.site-grid-4 {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(4, 1fr);
+}
+.site-grid-2 {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .site-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .site-grid-3 { grid-template-columns: 1fr; gap: 1rem; }
+  .site-grid-4 { grid-template-columns: 1fr; gap: 1rem; }
+  .site-grid-2 { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+/* ============ Hero on mobile ============ */
+@media (max-width: 768px) {
+  .hero-mobile-spacing { padding-top: 2.5rem !important; padding-bottom: 1rem !important; }
+  .site-h1 { font-size: clamp(2rem, 7vw, 2.75rem) !important; line-height: 1.1 !important; }
+  .site-lead { font-size: 1rem !important; line-height: 1.55 !important; }
+  .btn { width: 100%; justify-content: center; }
+  .hero-cta-row { flex-direction: column !important; gap: 0.75rem !important; width: 100%; max-width: 320px; margin: 0 auto; }
+}
+
+/* ============ AI Mindmap mobile sizing fix ============ */
+@media (max-width: 900px) {
+  .viz-stage {
+    aspect-ratio: auto !important;
+    max-width: 100% !important;
+    margin: 24px auto 0 !important;
+  }
+}
+
+/* ============ Stat card mobile ============ */
+@media (max-width: 768px) {
+  .stat-card {
+    padding: 1.25rem !important;
+  }
+  .stat-number {
+    font-size: clamp(2.25rem, 8vw, 3rem) !important;
+    line-height: 1 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .stat-label {
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+  }
+  .stat-source {
+    font-size: 0.6875rem !important;
+  }
+}
+
+/* ============ Trust row mobile ============ */
+@media (max-width: 768px) {
+  .trust-row {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
+  }
+  .trust-logo {
+    font-size: 0.6875rem !important;
+    flex-direction: column !important;
+    text-align: center;
+    gap: 0.5rem !important;
+  }
+}
+
+/* ============ Reactivation horizontal stat strip mobile ============ */
+@media (max-width: 768px) {
+  .reactivation-stat-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+  }
+}
+
+/* ============ Section padding tighten on mobile ============ */
+@media (max-width: 768px) {
+  .site-section {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+  .site-container {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+}
+
+/* ============ Testimonial cards mobile ============ */
+@media (max-width: 768px) {
+  .testimonial-card {
+    padding: 1.5rem !important;
+  }
+  .testimonial-quote {
+    font-size: 0.9375rem !important;
+    line-height: 1.55 !important;
+  }
+}
+
+/* ============ Mobile diagram mobile spacing ============ */
+@media (max-width: 768px) {
+  .mobile-diagram {
+    padding: 1.5rem 1rem !important;
+  }
+  .mob-section {
+    margin-bottom: 2rem !important;
+  }
+  .mob-section h4 {
+    margin-bottom: 0.875rem !important;
+    font-size: 0.6875rem !important;
+  }
+  .mob-pill {
+    padding: 0.875rem 1rem !important;
+    font-size: 0.9375rem !important;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+  }
+  .mob-pill:active {
+    transform: scale(0.98);
+    background: rgba(34, 211, 238, 0.05);
+    border-color: rgba(34, 211, 238, 0.4);
+  }
+  .mob-section.reactivation .mob-pill:active {
+    background: rgba(245, 158, 11, 0.05);
+    border-color: rgba(245, 158, 11, 0.4);
+  }
+}
+
+/* ============ Feature card mobile ============ */
+@media (max-width: 768px) {
+  .feature-card {
+    padding: 1.5rem !important;
+  }
+  .feature-card-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .feature-card h3 {
+    font-size: 1.0625rem !important;
+  }
+  .feature-card p {
+    font-size: 0.875rem !important;
+    line-height: 1.55 !important;
+  }
+}
