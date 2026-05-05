@@ -9,16 +9,23 @@ import { ThemeProvider } from '@/lib/ThemeProvider';
 import { OrgProvider } from '@/lib/OrgContext';
 
 // Marketing
-import MarketingLayout from '@/components/marketing/MarketingLayout';
-import Home from '@/pages/Home';
-import Features from '@/pages/Features';
-import Pricing from '@/pages/Pricing';
-import UseCases from '@/pages/UseCases';
-import About from '@/pages/About';
-import Contact from '@/pages/Contact';
-import Privacy from '@/pages/legal/Privacy';
-import Terms from '@/pages/legal/Terms';
-import TCPACompliance from '@/pages/legal/TCPACompliance';
+import MarketingLayout from '@/layouts/MarketingLayout';
+import Home from '@/pages/marketing/Home';
+import Features from '@/pages/marketing/Features';
+import HowItWorks from '@/pages/marketing/HowItWorks';
+import UseCases from '@/pages/marketing/UseCases';
+import UseCasesPiFirms from '@/pages/marketing/UseCasesPiFirms';
+import UseCasesLeadGen from '@/pages/marketing/UseCasesLeadGen';
+import UseCasesAggregators from '@/pages/marketing/UseCasesAggregators';
+import Problem from '@/pages/marketing/Problem';
+import Tech from '@/pages/marketing/Tech';
+import Pricing from '@/pages/marketing/Pricing';
+import About from '@/pages/marketing/About';
+import Contact from '@/pages/marketing/Contact';
+import Faq from '@/pages/marketing/Faq';
+import LegalTcpa from '@/pages/marketing/LegalTcpa';
+import LegalPrivacy from '@/pages/marketing/LegalPrivacy';
+import LegalTerms from '@/pages/marketing/LegalTerms';
 
 // Auth
 import SignIn from '@/pages/SignIn';
@@ -103,14 +110,20 @@ const AuthenticatedApp = () => {
       <Route element={<MarketingLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/features" element={<Features />} />
-        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/use-cases" element={<UseCases />} />
-        <Route path="/use-cases/:slug" element={<UseCases />} />
+        <Route path="/use-cases/pi-firms" element={<UseCasesPiFirms />} />
+        <Route path="/use-cases/lead-gen-agencies" element={<UseCasesLeadGen />} />
+        <Route path="/use-cases/aggregators" element={<UseCasesAggregators />} />
+        <Route path="/problem" element={<Problem />} />
+        <Route path="/tech" element={<Tech />} />
+        <Route path="/pricing" element={<Pricing />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/legal/privacy" element={<Privacy />} />
-        <Route path="/legal/terms" element={<Terms />} />
-        <Route path="/legal/tcpa" element={<TCPACompliance />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/legal/tcpa" element={<LegalTcpa />} />
+        <Route path="/legal/privacy" element={<LegalPrivacy />} />
+        <Route path="/legal/terms" element={<LegalTerms />} />
       </Route>
 
       {/* ── Auth ── */}
