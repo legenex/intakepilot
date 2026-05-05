@@ -110,22 +110,27 @@ export default function WorkflowEditor() {
   }, [id]);
 
   const loadWorkflow = async () => {
+    if (!id) { setLoading(false); return; }
     setLoading(true);
-    const wf = await base44.entities.Workflow.get(id);
+    let wf;
+    try {
+      wf = await base44.entities.Workflow.get(id);
+    } catch (_) {
+      setLoading(false);
+      return;
+    }
+    if (!wf) { setLoading(false); return; }
     setWorkflow(wf);
-    const loadedNodes = (wf.nodes || []).map(n => ({
-      ...n,
-      type: 'custom',
-      data: { ...n.data, nodeType: n.nodeType || n.type },
-    }));
     setNodes(wf.nodes || []);
     setEdges(wf.edges || []);
     setLoading(false);
     // Load versions
-    const vers = await base44.entities.WorkflowVersion.filter(
-      { workflow_id: id }, '-created_date', 10
-    );
-    setVersions(vers);
+    try {
+      const vers = await base44.entities.WorkflowVersion.filter({ workflow_id: id });
+      setVersions(vers.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10));
+    } catch (_) {
+      setVersions([]);
+    }
   };
 
   // ── Auto-save every 5s on change ───────────────────────────────
