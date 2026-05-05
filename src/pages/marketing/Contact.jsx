@@ -18,11 +18,11 @@ export default function Contact() {
     }
     setSubmitting(true);
     await base44.entities.SupportTicket.create({
-      name: form.name,
-      email: form.email,
-      company: form.company,
+      customer_name: form.name,
+      customer_email: form.email,
+      organization_id: 'public',
+      subject: form.company ? `Contact from ${form.company}` : 'Contact form submission',
       message: form.message,
-      subject: 'Contact form submission',
       status: 'open',
     });
     setSubmitted(true);
