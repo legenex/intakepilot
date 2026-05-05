@@ -11,8 +11,11 @@ export default function WorkflowRuns() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.Workflow.get(id)
-      .then(wf => { setWorkflow(wf); setLoading(false); })
+    base44.entities.Workflow.filter({ id })
+      .then(matches => {
+        setWorkflow(matches && matches.length > 0 ? matches[0] : null);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, [id]);
 

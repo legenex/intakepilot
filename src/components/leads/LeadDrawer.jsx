@@ -30,9 +30,15 @@ export default function LeadDrawer({ leadId, onClose, onRefresh, canEdit, canAdm
 
   const loadLead = useCallback(async () => {
     if (!leadId) return;
-    const l = await base44.entities.Lead.get(leadId);
-    setLead(l);
-    setLoading(false);
+    try {
+      const matches = await base44.entities.Lead.filter({ id: leadId });
+      setLead(matches && matches.length > 0 ? matches[0] : null);
+    } catch (err) {
+      console.warn('Failed to load lead:', err?.message);
+      setLead(null);
+    } finally {
+      setLoading(false);
+    }
   }, [leadId]);
 
   useEffect(() => {

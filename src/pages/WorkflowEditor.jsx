@@ -114,7 +114,8 @@ export default function WorkflowEditor() {
     setLoading(true);
     let wf;
     try {
-      wf = await base44.entities.Workflow.get(id);
+      const matches = await base44.entities.Workflow.filter({ id });
+      wf = matches && matches.length > 0 ? matches[0] : null;
     } catch (_) {
       setLoading(false);
       return;
