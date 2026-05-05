@@ -54,9 +54,7 @@ export default function WorkflowsList() {
 
   const loadWorkflows = async () => {
     setLoading(true);
-    const data = await base44.entities.Workflow.filter(
-      { organization_id: currentOrg.id }, '-created_date', 50
-    );
+    const data = await base44.entities.Workflow.filter({ organization_id: currentOrg.id });
     setWorkflows(data);
     setLoading(false);
   };
