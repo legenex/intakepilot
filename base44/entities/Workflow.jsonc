@@ -1,0 +1,82 @@
+{
+  "name": "Workflow",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "Organization this workflow belongs to"
+    },
+    "name": {
+      "type": "string",
+      "description": "Workflow name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Workflow description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused"
+      ],
+      "default": "draft",
+      "description": "Workflow status"
+    },
+    "trigger_config": {
+      "type": "object",
+      "default": {},
+      "description": "Trigger configuration"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Workflow nodes"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Workflow edges"
+    },
+    "version": {
+      "type": "number",
+      "default": 1,
+      "description": "Workflow version"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Email of creator"
+    },
+    "last_run_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last execution timestamp"
+    },
+    "run_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Total run count"
+    },
+    "success_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Successful run count"
+    },
+    "failure_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Failed run count"
+    }
+  },
+  "required": [
+    "organization_id",
+    "name"
+  ]
+}

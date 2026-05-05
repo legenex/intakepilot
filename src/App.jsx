@@ -44,6 +44,9 @@ import CallCenter from '@/pages/CallCenter';
 import Integrations from '@/pages/Integrations';
 import ComplianceAudit from '@/pages/ComplianceAudit';
 import ComingSoon from '@/pages/ComingSoon';
+import WorkflowsList from '@/pages/WorkflowsList';
+import WorkflowEditor from '@/pages/WorkflowEditor';
+import WorkflowRuns from '@/pages/WorkflowRuns';
 
 // Platform (Super Admin)
 import PlatformLayout from '@/components/platform/PlatformLayout';
@@ -155,8 +158,10 @@ const AuthenticatedApp = () => {
         <Route path="/integrations" element={<Integrations />} />
         <Route path="/admin/compliance" element={<ComplianceAudit />} />
 
-        {/* Future stubs */}
-        <Route path="/workflows" element={<ComingSoon />} />
+        {/* Workflows */}
+        <Route path="/workflows" element={<WorkflowsList />} />
+        <Route path="/workflows/:id" element={<WorkflowEditor />} />
+        <Route path="/workflows/:id/runs" element={<WorkflowRuns />} />
       </Route>
 
       {/* Platform (Super Admin) */}

@@ -1,0 +1,55 @@
+{
+  "name": "WorkflowTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Template name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Template description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "intake",
+        "reactivation",
+        "routing",
+        "capture",
+        "general"
+      ],
+      "default": "general",
+      "description": "Template category"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Template nodes"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Template edges"
+    },
+    "trigger_config": {
+      "type": "object",
+      "default": {},
+      "description": "Template trigger config"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When template was created"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

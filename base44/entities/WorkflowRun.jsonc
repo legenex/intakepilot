@@ -1,0 +1,68 @@
+{
+  "name": "WorkflowRun",
+  "type": "object",
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "description": "Parent workflow ID"
+    },
+    "organization_id": {
+      "type": "string",
+      "description": "Organization this run belongs to"
+    },
+    "lead_id": {
+      "type": "string",
+      "description": "Associated lead ID (nullable)"
+    },
+    "triggered_by": {
+      "type": "object",
+      "default": {},
+      "description": "Trigger context"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Run start timestamp"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Run end timestamp (nullable)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "paused",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Run status"
+    },
+    "node_executions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Per-node execution records"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error message if failed (nullable)"
+    },
+    "variables": {
+      "type": "object",
+      "default": {},
+      "description": "Runtime variables"
+    }
+  },
+  "required": [
+    "workflow_id",
+    "organization_id",
+    "started_at"
+  ]
+}

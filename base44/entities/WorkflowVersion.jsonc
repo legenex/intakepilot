@@ -1,0 +1,48 @@
+{
+  "name": "WorkflowVersion",
+  "type": "object",
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "description": "Parent workflow ID"
+    },
+    "version_number": {
+      "type": "number",
+      "description": "Version number"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Snapshot of nodes"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Snapshot of edges"
+    },
+    "trigger_config": {
+      "type": "object",
+      "default": {},
+      "description": "Snapshot of trigger config"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this version was created"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Who created this version"
+    }
+  },
+  "required": [
+    "workflow_id",
+    "version_number"
+  ]
+}

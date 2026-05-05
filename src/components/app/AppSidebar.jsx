@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Settings, Users, HelpCircle, LogOut, ChevronDown,
   Building2, Briefcase, BarChart3, Database, Zap, MessageSquare, Phone,
-  Shield, PlugZap, Crown
+  Shield, PlugZap, Crown, Workflow
 } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { useOrg } from '@/lib/OrgContext';
@@ -27,6 +27,7 @@ const NAV_SECTIONS = [
     label: 'AI Automation',
     items: [
       { label: 'Agents', href: '/agents', icon: Zap },
+      { label: 'Workflows', href: '/workflows', icon: Workflow },
       { label: 'Calls', href: '/calls', icon: Phone },
       { label: 'Messages', href: '/messages', icon: MessageSquare },
     ],
