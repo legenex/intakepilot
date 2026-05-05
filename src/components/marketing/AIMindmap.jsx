@@ -238,10 +238,10 @@ export default function AIMindmap() {
           {reactArcs.map(c => <use key={`rb-${c.id}`} href={`#${c.id}`} className="conn reactivation" />)}
         </g>
         <g>
-          {fwdSrc.map((c, i) => <React.Fragment key={`pa-${c.id}`}><Particle pathId={c.id} dur={4 + (i % 3) * 0.6} delay={i * 0.7} /><Particle pathId={c.id} dur={4 + (i % 3) * 0.6} delay={i * 0.7 + 2} /></React.Fragment>)}
-          {fwdOut.map((c, i) => <React.Fragment key={`pa-${c.id}`}><Particle pathId={c.id} dur={4 + (i % 3) * 0.5} delay={i * 0.5 + 1} /><Particle pathId={c.id} dur={4 + (i % 3) * 0.5} delay={i * 0.5 + 3} /></React.Fragment>)}
-          {lifeConn.map((c, i) => <Particle key={`pa-${c.id}`} pathId={c.id} dur={5 + (i % 2)} delay={i * 0.9} color="amber" />)}
-          {reactArcs.map((c, i) => <React.Fragment key={`pa-${c.id}`}><Particle pathId={c.id} dur={6} delay={i * 1.2} color="amber" /><Particle pathId={c.id} dur={6} delay={i * 1.2 + 3} color="amber" /></React.Fragment>)}
+          {fwdSrc.map((c, i) => <React.Fragment key={`fpa-${c.id}`}><Particle pathId={c.id} dur={4 + (i % 3) * 0.6} delay={i * 0.7} /><Particle pathId={c.id} dur={4 + (i % 3) * 0.6} delay={i * 0.7 + 2} /></React.Fragment>)}
+          {fwdOut.map((c, i) => <React.Fragment key={`opa-${c.id}`}><Particle pathId={c.id} dur={4 + (i % 3) * 0.5} delay={i * 0.5 + 1} /><Particle pathId={c.id} dur={4 + (i % 3) * 0.5} delay={i * 0.5 + 3} /></React.Fragment>)}
+          {lifeConn.map((c, i) => <Particle key={`lpa-${c.id}`} pathId={c.id} dur={5 + (i % 2)} delay={i * 0.9} color="amber" />)}
+          {reactArcs.map((c, i) => <React.Fragment key={`rpa-${c.id}`}><Particle pathId={c.id} dur={6} delay={i * 1.2} color="amber" /><Particle pathId={c.id} dur={6} delay={i * 1.2 + 3} color="amber" /></React.Fragment>)}
         </g>
         <CoreNode />
         <g>
