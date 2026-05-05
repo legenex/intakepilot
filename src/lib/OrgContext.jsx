@@ -11,7 +11,8 @@ export function OrgProvider({ children }) {
 
   const loadOrgs = async () => {
     try {
-      const user = await base44.auth.me();
+      let user;
+      try { user = await base44.auth.me(); } catch (_) { user = null; }
       if (!user) { setLoading(false); return; }
       
       const memberships = await base44.entities.OrganizationMember.filter(
