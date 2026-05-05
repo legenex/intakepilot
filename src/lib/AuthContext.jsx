@@ -101,10 +101,14 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      // Clean up stale OrganizationMember records once per session (super admins only)
-      if (currentUser.role === 'admin' && !localStorage.getItem('intakepilot-stale-members-cleaned')) {
+      // Clean up stale OrganizationMember records once per session
+      // Only run if user is a verified super admin (has an active SuperAdminGrant)
+      if (!localStorage.getItem('intakepilot-stale-members-cleaned')) {
         try {
-          await base44.functions.invoke('cleanupStaleMembers', {});
+          const grants = await base44.entities.SuperAdminGrant.filter({ email: currentUser.email.toLowerCase(), active: true });
+          if (grants.length > 0) {
+            await base44.functions.invoke('cleanupStaleMembers', {});
+          }
           localStorage.setItem('intakepilot-stale-members-cleaned', 'true');
         } catch (_) {
           // Non-critical — silently skip
