@@ -16,22 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkAppState();
-    // Auto-seed super admins on first app load
-    if (!localStorage.getItem('intakepilot-super-admins-seeded')) {
-      seedSuperAdminsIfNeeded();
-    }
   }, []);
-
-  const seedSuperAdminsIfNeeded = async () => {
-    try {
-      const { seedSuperAdmins } = await import('@/functions/seedSuperAdmins');
-      await seedSuperAdmins({});
-      localStorage.setItem('intakepilot-super-admins-seeded', 'true');
-    } catch (err) {
-      console.error('Failed to seed super admins:', err);
-      // Non-critical, don't block app startup
-    }
-  };
 
   const checkAppState = async () => {
     try {
@@ -113,6 +98,17 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setIsLoadingAuth(false);
       setAuthChecked(true);
+
+      // Seed super admins once per authenticated session
+      if (!localStorage.getItem('intakepilot-super-admins-seeded')) {
+        try {
+          const { seedSuperAdmins } = await import('@/functions/seedSuperAdmins');
+          await seedSuperAdmins({});
+          localStorage.setItem('intakepilot-super-admins-seeded', 'true');
+        } catch (err) {
+          console.error('Failed to seed super admins:', err);
+        }
+      }
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);
