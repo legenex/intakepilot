@@ -26,9 +26,9 @@ export function OrgProvider({ children }) {
       const userOrgs = [];
       for (const m of memberships) {
         try {
-          const orgs = await base44.entities.Organization.filter({ id: m.organization_id });
-          if (orgs.length > 0 && !orgs[0].soft_delete_at) {
-            userOrgs.push(orgs[0]);
+          const org = await base44.entities.Organization.get(m.organization_id);
+          if (org && !org.soft_delete_at) {
+            userOrgs.push(org);
           }
         } catch (err) {
           // Silently skip inaccessible orgs
