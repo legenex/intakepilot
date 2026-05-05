@@ -18,12 +18,10 @@ export default function DemoRequestModal({ open, onOpenChange }) {
 
     setLoading(true);
     try {
-      await base44.entities.SupportTicket.create({
-        email: email,
-        subject: 'Demo Request',
-        message: 'User requested a personalized walkthrough demo',
-        status: 'open',
-        priority: 'normal',
+      await base44.integrations.Core.SendEmail({
+        to: 'hello@legenex.com',
+        subject: 'New Demo Request',
+        body: `A demo was requested from the marketing site.\n\nEmail: ${email}`,
       });
       toast({ title: 'Demo request submitted! We\'ll be in touch soon.' });
       setEmail('');
