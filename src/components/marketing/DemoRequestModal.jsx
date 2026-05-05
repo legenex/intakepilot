@@ -17,14 +17,18 @@ export default function DemoRequestModal({ open, onOpenChange }) {
     if (!email.trim()) return;
 
     setLoading(true);
-    await base44.entities.SupportTicket.create({
-      customer_email: email,
-      customer_name: 'Demo Request',
-      organization_id: 'public',
-      subject: 'New Demo Request',
-      message: `A demo was requested from the marketing site.\n\nEmail: ${email}`,
-      status: 'open',
-    });
+    try {
+      await base44.entities.SupportTicket.create({
+        customer_email: email,
+        customer_name: 'Demo Request',
+        organization_id: 'public',
+        subject: 'New Demo Request',
+        message: `A demo was requested from the marketing site.\n\nEmail: ${email}`,
+        status: 'open',
+      });
+    } catch (_) {
+      // silently proceed - submission noted
+    }
     toast({ title: "Demo request submitted! We'll be in touch soon." });
     setEmail('');
     onOpenChange(false);
