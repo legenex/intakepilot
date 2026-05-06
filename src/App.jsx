@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { useState, useEffect } from 'react';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import { isSuperAdmin } from '@/lib/superAdmin';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { ThemeProvider } from '@/lib/ThemeProvider';
 import { OrgProvider } from '@/lib/OrgContext';
@@ -85,9 +86,52 @@ import BillingSettings from '@/pages/settings/BillingSettings';
 import BrandingSettings from '@/pages/settings/BrandingSettings';
 import ProfileSettings from '@/pages/settings/ProfileSettings';
 
+// ── SuperAdminGate — renders 404 for non-super-admins ────────────────────────
+const SuperAdminGate = ({ children }) => {
+  const { user, isAuthenticated } = useAuth();
+  const [authorized, setAuthorized] = useState(null); // null=loading, true=ok, false=denied
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!isAuthenticated || !user) {
+        if (!cancelled) setAuthorized(false);
+        return;
+      }
+      try {
+        const result = await isSuperAdmin(user);
+        if (!cancelled) setAuthorized(result);
+      } catch {
+        if (!cancelled) setAuthorized(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user, isAuthenticated]);
+
+  if (authorized === null) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
+      </div>
+    );
+  }
+  if (!authorized) return <PageNotFound />;
+  return children;
+};
+
+// ── SubscriptionGate — structure ready for future paid-user enforcement ───────
+// To enforce billing: check org.subscription_status in ['trialing','active','past_due']
+// OR org.internal_comped === true OR user is super admin.
+// For now: all authenticated users pass through.
+const SubscriptionGate = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/signin" replace />;
+  return children;
+};
+
 // ── AuthenticatedApp — only handles authenticated routes ──────────────────────
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated } = useAuth();
 
   // Safety timeout: if auth hangs beyond 8s, fall through to render routes
   const [forceReady, setForceReady] = useState(false);
@@ -112,9 +156,17 @@ const AuthenticatedApp = () => {
     }
   }
 
+  // Auth check complete and user is NOT authenticated → redirect to signin
+  // Preserve the original destination so we can redirect back after login
+  if (!isAuthenticated) {
+    const currentPath = window.location.pathname + window.location.search;
+    const redirectTo = currentPath !== '/' ? `?redirect=${encodeURIComponent(currentPath)}` : '';
+    return <Navigate to={`/signin${redirectTo}`} replace />;
+  }
+
   return (
     <Routes>
-      {/* App (authenticated) */}
+      {/* Authenticated app routes. To enforce paid subscription in the future, wrap <AppLayout /> Route in <SubscriptionGate>. */}
       <Route element={<AppLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
 
@@ -159,8 +211,8 @@ const AuthenticatedApp = () => {
         <Route path="/workflows/:id/runs" element={<WorkflowRuns />} />
       </Route>
 
-      {/* Platform (Super Admin) */}
-      <Route element={<PlatformLayout />}>
+      {/* Platform (Super Admin) — gated: non-super-admins get 404 */}
+      <Route element={<SuperAdminGate><PlatformLayout /></SuperAdminGate>}>
         <Route path="/platform" element={<PlatformDashboard />} />
         <Route path="/platform/organizations" element={<PlatformOrganizations />} />
         <Route path="/platform/organizations/:id" element={<PlatformOrganizationDetail />} />
