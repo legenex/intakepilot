@@ -48,13 +48,13 @@ export default function Pricing() {
   useReveal();
 
   return (
-    <div>
+    <div className="marketing-root">
       <section className="site-section">
         <div className="site-container">
           <div className="reveal" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div className="section-eyebrow" style={{ justifyContent: 'center' }}>Pricing</div>
-            <h1 className="site-h1" style={{ marginBottom: '1rem' }}>Simple, transparent pricing.</h1>
-            <p className="site-lead" style={{ margin: '0 auto 2rem' }}>Start with a 14-day free trial. No credit card required.</p>
+            <div className="section-eyebrow" style={{ justifyContent: 'center' }}>PRICING</div>
+            <h1 className="site-h1" style={{ marginBottom: '1rem' }}>Three plans. Real numbers. Clear overage rates.</h1>
+            <p className="site-lead" style={{ margin: '0 auto 2rem' }}>Pick a tier. Use your free 14-day trial. Cancel anytime. No card required upfront.</p>
 
             {/* Toggle */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '2rem', padding: '0.375rem 0.75rem' }}>
@@ -73,7 +73,7 @@ export default function Pricing() {
           </div>
 
           {/* Plan cards */}
-          <div className="grid-3" style={{ alignItems: 'stretch', marginBottom: '5rem' }}>
+          <div className="site-grid-3" style={{ alignItems: 'stretch', marginBottom: '5rem' }}>
             {plans.map((plan, i) => (
               <div
                 key={plan.name}
@@ -148,6 +148,16 @@ export default function Pricing() {
                 </Link>
               </div>
             ))}
+          </div>
+
+          {/* Enterprise */}
+          <div className="reveal" style={{ background: 'var(--bg-card)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '1rem', padding: '2rem', marginBottom: '4rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent-amber)', marginBottom: '0.5rem' }}>ENTERPRISE</div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.375rem' }}>Need 50,000+ leads/month?</h3>
+              <p style={{ fontSize: '0.9375rem', color: 'var(--text-muted)' }}>Custom infrastructure, dedicated success manager, volume pricing, SLA commitments.</p>
+            </div>
+            <a href="/contact" className="btn btn-secondary" style={{ flexShrink: 0 }}>Let's Talk →</a>
           </div>
 
           {/* FAQ */}
