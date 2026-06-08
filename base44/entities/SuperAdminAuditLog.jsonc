@@ -6,34 +6,29 @@
       "type": "string",
       "description": "The super admin who took the action"
     },
+    "user_email": {
+      "type": "string"
+    },
     "action_type": {
       "type": "string",
       "enum": [
-        "viewed_pii",
-        "viewed_financial",
-        "viewed_call_recording",
-        "impersonation_started",
-        "impersonation_ended",
+        "view_org",
+        "edit_org",
+        "impersonate_start",
+        "impersonate_end",
         "grant_super_admin",
         "revoke_super_admin",
-        "org_created",
-        "org_paused",
-        "org_resumed",
-        "org_deleted",
-        "user_force_logout",
-        "user_reset_mfa",
-        "user_password_reset",
-        "billing_credit_applied",
-        "billing_plan_changed",
-        "billing_trial_extended",
-        "compliance_override_reviewed",
-        "feature_flag_changed",
-        "announcement_published",
-        "support_ticket_escalated",
-        "data_export_initiated",
-        "danger_zone_action",
-        "integration_tested",
-        "webhook_manually_retried"
+        "force_logout_user",
+        "force_logout_all",
+        "pause_org",
+        "resume_org",
+        "view_lead",
+        "view_call_recording",
+        "view_audit_log",
+        "apply_credit",
+        "extend_trial",
+        "change_plan",
+        "comp_account"
       ]
     },
     "target_type": {
@@ -44,36 +39,26 @@
         "lead",
         "call",
         "message",
-        "buyer",
-        "agent",
-        "compliance_override",
-        "support_ticket",
-        "billing",
-        "integration",
-        "feature_flag",
-        "announcement",
-        "api_key"
+        "billing"
       ]
     },
     "target_id": {
-      "type": "string",
-      "description": "ID of the entity affected"
+      "type": "string"
     },
     "target_organization_id": {
-      "type": "string",
-      "description": "If applicable, which org was affected"
+      "type": "string"
     },
     "before_state": {
       "type": "object",
-      "description": "JSON snapshot before change (optional, not for sensitive reads)"
+      "description": "Snapshot before change (for edit actions)"
     },
     "after_state": {
       "type": "object",
-      "description": "JSON snapshot after change (optional)"
+      "description": "Snapshot after change"
     },
     "reason": {
       "type": "string",
-      "description": "Why this action was taken. Required for sensitive actions like PII view, impersonation, danger zone."
+      "description": "Why this action was taken (required for sensitive actions)"
     },
     "ip_address": {
       "type": "string"
@@ -83,33 +68,14 @@
     },
     "impersonating": {
       "type": "boolean",
-      "default": false,
-      "description": "Was this action taken while impersonating a user?"
+      "default": false
     },
     "impersonated_user_id": {
+      "type": "string"
+    },
+    "occurred_at": {
       "type": "string",
-      "description": "If impersonating, which user?"
-    },
-    "impersonation_reason": {
-      "type": "string",
-      "enum": [
-        "Customer Support",
-        "Bug Investigation",
-        "Account Recovery",
-        "Data Verification",
-        "Other"
-      ],
-      "description": "Reason for the impersonation session"
-    },
-    "suspicious_flag": {
-      "type": "boolean",
-      "default": false,
-      "description": "Internal flag if this action seems unusual"
-    },
-    "data_accessed_count": {
-      "type": "number",
-      "default": 1,
-      "description": "For bulk reads, how many records were accessed"
+      "format": "date-time"
     }
   },
   "required": [
