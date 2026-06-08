@@ -66,8 +66,8 @@ export default function Home() {
         <div className="site-container" style={{ textAlign: 'center', marginBottom: '1rem' }}>
           <div className="section-eyebrow" style={{ justifyContent: 'center' }}>AI-POWERED LEGAL INTAKE</div>
           <h1 className="site-h1" style={{ marginBottom: '1.25rem' }}>
-            Stop losing leads.<br />
-            <span style={{ color: 'var(--accent-primary)' }}>Start signing retainers.</span>
+            Stop Losing Leads<br />
+            <span style={{ color: 'var(--accent-primary)' }}>Let AI Run Your Intake.</span>
           </h1>
           <p className="site-lead" style={{ margin: '0 auto 2rem' }}>
             IntakePilot works across every lead state — raw, disqualified, no-contact, unsold.
