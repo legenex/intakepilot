@@ -70,8 +70,7 @@ export default function Home() {
             <span style={{ color: 'var(--accent-primary)' }}>Let AI Run Your Intake.</span>
           </h1>
           <p className="site-lead" style={{ margin: '0 auto 2rem' }}>
-            IntakePilot works across every lead state — raw, disqualified, no-contact, unsold.
-            The AI doesn't clock out. Neither does your pipeline.
+            Specialized AI call center for legal intake. Faster than humans, cheaper than a call center, available every minute of every day.
           </p>
           <div className="hero-cta-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <Link to="/signup" className="btn btn-primary">Start Free Trial</Link>
