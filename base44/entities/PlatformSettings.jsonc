@@ -1,0 +1,32 @@
+{
+  "name": "PlatformSettings",
+  "type": "object",
+  "properties": {
+    "setting_key": {
+      "type": "string",
+      "enum": [
+        "mfa_required_for_super_admin",
+        "super_admin_session_timeout_minutes",
+        "impersonation_max_duration_minutes",
+        "impersonation_rate_limit_per_hour",
+        "email_notifications_enabled",
+        "audit_log_retention_years",
+        "announcement_banner_style",
+        "feature_flags"
+      ],
+      "description": "Key for this setting"
+    },
+    "value": {
+      "type": "object",
+      "description": "The setting value (can be boolean, number, string, or object)"
+    },
+    "updated_by": {
+      "type": "string",
+      "description": "Super admin who last changed this"
+    }
+  },
+  "required": [
+    "setting_key",
+    "value"
+  ]
+}

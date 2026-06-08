@@ -1,0 +1,65 @@
+{
+  "name": "FeatureFlag",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique flag name (e.g. workflow_canvas_v2)"
+    },
+    "description": {
+      "type": "string"
+    },
+    "enabled_globally": {
+      "type": "boolean",
+      "default": false
+    },
+    "targeted_orgs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Specific orgs that have this flag enabled"
+    },
+    "targeted_plans": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "starter",
+          "pro",
+          "agency"
+        ]
+      },
+      "default": [],
+      "description": "Plans that get this flag automatically"
+    },
+    "rollout_percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0,
+      "description": "Percentage of users (0-100) to roll out to"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Super admin who created this flag"
+    },
+    "last_modified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "usage_count_7d": {
+      "type": "number",
+      "default": 0,
+      "description": "Approximate usage count last 7 days (cached)"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
