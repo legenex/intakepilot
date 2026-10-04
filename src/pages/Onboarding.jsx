@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import Logo from '@/components/shared/Logo';
-import { ArrowRight, ArrowLeft, Building2, Briefcase, Check, Loader2, Zap } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Loader2, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const verticals = [

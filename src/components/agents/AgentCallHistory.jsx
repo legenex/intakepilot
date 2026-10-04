@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { Play, Mic, ChevronDown } from 'lucide-react';
+import { Play, ChevronDown } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { getLeadName } from '@/lib/leadUtils';
 

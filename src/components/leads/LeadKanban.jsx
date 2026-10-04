@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { base44 } from '@/api/base44Client';
 import { useOrg } from '@/lib/OrgContext';
 import { Badge } from '@/components/ui/badge';
-import { STATUS_LABELS, STATUS_COLORS, KANBAN_COLUMNS, getLeadName, normalizePhone } from '@/lib/leadUtils';
+import { STATUS_LABELS, KANBAN_COLUMNS, getLeadName } from '@/lib/leadUtils';
 import { logActivity } from '@/hooks/useLeads';
 import { formatDistanceToNow } from 'date-fns';
 

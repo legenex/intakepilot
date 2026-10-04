@@ -5,9 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, MessageSquare, Bot, User, Phone, RefreshCw, Sparkles, UserCheck, UserX, Search, AlertTriangle } from 'lucide-react';
+import { Send, MessageSquare, Bot, User, RefreshCw, Sparkles, UserCheck, Search } from 'lucide-react';
 import { getLeadName } from '@/lib/leadUtils';
-import { formatDistanceToNow, format } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 
 const INTENT_COLORS = {
   positive: 'text-success', negative: 'text-destructive', question: 'text-warning',

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import { STATUS_LABELS, STATUS_COLORS, VERTICAL_LABELS, SOURCE_LABELS, getLeadName, formatCents } from '@/lib/leadUtils';
+import { STATUS_LABELS, STATUS_COLORS, VERTICAL_LABELS, SOURCE_LABELS, getLeadName } from '@/lib/leadUtils';
 import { formatDistanceToNow } from 'date-fns';
 
 const COLUMNS = [

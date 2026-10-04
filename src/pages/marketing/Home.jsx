@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import AIMindmap from '@/components/marketing/AIMindmap';
 import { useReveal } from '@/hooks/useReveal';
 import {
-  Bolt, Workflow, Phone, Sms, Doc, Transfer, Shield, Database, Check, Arrow,
+  Bolt, Workflow, Phone, Sms, Doc, Transfer, Shield, Database, Arrow,
 } from '@/components/marketing/icons.jsx';
 
 /* ── Trust bar logos ─────────────────────────────────────── */

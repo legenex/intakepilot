@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { startCall } from '@/functions/startCall';
 import { useToast } from '@/components/ui/use-toast';
-import { Phone, PhoneOff, Loader2, AlertTriangle, CheckCircle2, Clock, MessageSquare } from 'lucide-react';
+import { Phone, Loader2, AlertTriangle } from 'lucide-react';
 
 export default function AgentCallTestPanel({ agent, orgId, credentials, canEdit }) {
   const { toast } = useToast();

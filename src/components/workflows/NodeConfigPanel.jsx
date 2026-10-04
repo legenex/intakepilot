@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
-import { getNodeSchema, LEAD_FIELDS, LEAD_STATUSES, US_STATES_LIST, TIMEZONES } from '@/lib/workflowNodeSchemas';
+import { getNodeSchema, LEAD_FIELDS, LEAD_STATUSES, US_STATES_LIST } from '@/lib/workflowNodeSchemas';
 import { getNodeIcon } from '@/components/workflows/NodeIcon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

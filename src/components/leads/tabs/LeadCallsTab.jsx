@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Phone, PhoneOutgoing, PhoneIncoming, Play, Mic, Clock } from 'lucide-react';
+import { Phone, PhoneOutgoing, PhoneIncoming, Play, Mic } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 const STATUS_STYLES = {

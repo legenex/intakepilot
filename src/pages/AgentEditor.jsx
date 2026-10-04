@@ -16,7 +16,7 @@ import { enhancePromptWithAI } from '@/functions/enhancePromptWithAI';
 import { listProviderVoices } from '@/functions/listProviderVoices';
 import {
   ArrowLeft, Save, Zap, AlertTriangle,
-  Loader2, CheckCircle2, Sparkles, Phone
+  Loader2, CheckCircle2, Sparkles
 } from 'lucide-react';
 import { TOOL_DEFINITIONS } from '@/lib/agentTemplates';
 import AgentCallTestPanel from '@/components/agents/AgentCallTestPanel';

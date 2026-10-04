@@ -17,7 +17,7 @@ import NodePalette from '@/components/workflows/NodePalette';
 import CustomNode from '@/components/workflows/CustomNode';
 import NodeConfigPanel from '@/components/workflows/NodeConfigPanel';
 import WorkflowValidationBadge from '@/components/workflows/WorkflowValidationBadge';
-import { validateWorkflow, getNodeSchema } from '@/lib/workflowNodeSchemas';
+import { validateWorkflow } from '@/lib/workflowNodeSchemas';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';

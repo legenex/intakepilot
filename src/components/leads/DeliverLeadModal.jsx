@@ -7,7 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useEligibleBuyers } from '@/hooks/useBuyers';
 import { logActivity } from '@/hooks/useLeads';
 import { formatCents, VERTICAL_LABELS } from '@/lib/leadUtils';
-import { Star, Send, AlertTriangle } from 'lucide-react';
+import { Send, AlertTriangle } from 'lucide-react';
 
 function renderTemplate(template, lead) {
   if (!template) return JSON.stringify(lead, null, 2);

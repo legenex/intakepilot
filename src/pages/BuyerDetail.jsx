@@ -12,7 +12,6 @@ import { ArrowLeft, Edit, Pause, Play } from 'lucide-react';
 import { formatCents, VERTICAL_LABELS } from '@/lib/leadUtils';
 import { useToast } from '@/components/ui/use-toast';
 import AddBuyerModal from '@/components/buyers/AddBuyerModal';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatDistanceToNow } from 'date-fns';
 
 const DELIVERY_STATUS_COLORS = { pending:'text-muted-foreground', sent:'text-blue-400', accepted:'text-success', rejected:'text-destructive', refunded:'text-warning', failed:'text-destructive' };

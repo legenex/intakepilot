@@ -1,7 +1,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { AlertCircle } from 'lucide-react';
-import { getNodeSchema, getConfigSummary, LEAD_STATUSES } from '@/lib/workflowNodeSchemas';
+import { getNodeSchema, getConfigSummary } from '@/lib/workflowNodeSchemas';
 import { getNodeIcon } from '@/components/workflows/NodeIcon';
 
 function isIncomplete(type, data = {}) {

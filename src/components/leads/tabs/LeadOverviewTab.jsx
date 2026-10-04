@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { STATUS_LABELS, VERTICAL_LABELS, SOURCE_LABELS, KANBAN_COLUMNS, normalizePhone } from '@/lib/leadUtils';
+import { STATUS_LABELS, VERTICAL_LABELS, SOURCE_LABELS, normalizePhone } from '@/lib/leadUtils';
 import { logActivity } from '@/hooks/useLeads';
 
 const US_STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];

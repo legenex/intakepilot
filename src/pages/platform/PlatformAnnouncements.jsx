@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Pause, X } from 'lucide-react';
+import { Plus, Pause } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function PlatformAnnouncements() {

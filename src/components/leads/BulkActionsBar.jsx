@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { X, Tag, Trash2, Send, ArrowRight } from 'lucide-react';
+import { X, Trash2, ArrowRight } from 'lucide-react';
 import { STATUS_LABELS, KANBAN_COLUMNS } from '@/lib/leadUtils';
 import { logActivity } from '@/hooks/useLeads';
 

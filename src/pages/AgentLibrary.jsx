@@ -9,8 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Plus, Phone, MessageSquare, Zap, Settings, Play, Pause,
-  BarChart3, CheckCircle2, ArrowRightLeft, Search, AlertTriangle
+  Plus, Phone, MessageSquare, Zap, Settings, Play, Pause, Search, AlertTriangle
 } from 'lucide-react';
 import CreateAgentModal from '@/components/agents/CreateAgentModal';
 import { formatDistanceToNow } from 'date-fns';

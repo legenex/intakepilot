@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Check, X, HelpCircle } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import CTASection from '@/components/marketing/CTASection';
 
 const plans = [

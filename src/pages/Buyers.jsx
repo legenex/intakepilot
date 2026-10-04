@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, Building2, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Plus, Building2 } from 'lucide-react';
 import { useBuyers } from '@/hooks/useBuyers';
 import { useOrg } from '@/lib/OrgContext';
 import { formatCents, VERTICAL_LABELS } from '@/lib/leadUtils';

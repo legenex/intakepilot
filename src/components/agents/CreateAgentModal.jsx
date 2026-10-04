@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Wand2, BookTemplate, PenLine, Sparkles, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Loader2, BookTemplate, PenLine, Sparkles, AlertTriangle, ArrowRight } from 'lucide-react';
 import { SYSTEM_TEMPLATES } from '@/lib/agentTemplates';
 import { generateAgentWithAI } from '@/functions/generateAgentWithAI';
 import { useToast } from '@/components/ui/use-toast';

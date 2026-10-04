@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,7 @@ import {
   AlertDialogDescription,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { MoreVertical, Download, Zap, Eye, Edit, LogIn, Lock, Trash2, Loader2 } from 'lucide-react';
+import { MoreVertical, Download, Zap, Eye, Edit, Lock, Trash2, Loader2 } from 'lucide-react';
 
 export default function PlatformOrganizations() {
   const { toast } = useToast();

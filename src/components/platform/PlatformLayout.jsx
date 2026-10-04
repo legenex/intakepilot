@@ -6,7 +6,6 @@ import { useOrg } from '@/lib/OrgContext';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import PlatformSidebar from './PlatformSidebar';
-import PlatformTopBar from './PlatformTopBar';
 import PageNotFound from '@/lib/PageNotFound';
 
 export default function PlatformLayout() {

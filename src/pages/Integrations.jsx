@@ -3,11 +3,11 @@ import { base44 } from '@/api/base44Client';
 import { useOrg } from '@/lib/OrgContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PROVIDER_CONFIG } from '@/lib/providerUtils';
 import ProviderCard from '@/components/integrations/ProviderCard';
-import { Phone, MessageSquare, Mic, Zap, AlertTriangle, CreditCard } from 'lucide-react';
+import { Phone, MessageSquare, Mic, AlertTriangle, CreditCard } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const PROVIDERS_ORDER = ['retell', 'vapi', 'twilio', 'elevenlabs'];

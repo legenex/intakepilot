@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, AlertTriangle, Download, CheckCircle2, XCircle, Info } from 'lucide-react';
-import { formatDistanceToNow, format } from 'date-fns';
+import { Shield, AlertTriangle, Download, CheckCircle2, XCircle } from 'lucide-react';
+import { format } from 'date-fns';
 import { getLeadName } from '@/lib/leadUtils';
 
 const CHECK_CONFIG = {

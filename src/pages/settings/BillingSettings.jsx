@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { PLAN_LIMITS, PLAN_PRICING } from '@/lib/planLimits';
 import { useToast } from '@/components/ui/use-toast';
-import { AlertTriangle, CreditCard, ExternalLink, ArrowUpRight, Loader2, ArrowUpRight as ArrowIcon } from 'lucide-react';
+import { AlertTriangle, CreditCard, ExternalLink, ArrowUpRight, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function BillingSettings() {

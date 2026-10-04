@@ -14,7 +14,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
-  Workflow, Plus, Play, Clock, ArrowRight, Loader2,
+  Workflow, Plus, Play, Clock, Loader2,
   MoreHorizontal, Pencil, Copy, Trash2, Activity,
   CheckCircle2, XCircle, PauseCircle, Power, Search,
 } from 'lucide-react';

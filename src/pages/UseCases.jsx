@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { ArrowRight, Building2, Users, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import CTASection from '@/components/marketing/CTASection';

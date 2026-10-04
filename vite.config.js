@@ -1,10 +1,18 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import base44 from "@base44/vite-plugin"
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// https://vite.dev/config/
+const root = path.dirname(fileURLToPath(import.meta.url))
+
 export default defineConfig({
-  logLevel: 'error', // Suppress warnings, only show errors
+  logLevel: 'error',
+  resolve: {
+    alias: {
+      '@': path.join(root, 'src'),
+    },
+  },
   plugins: [
     base44({
       // Support for legacy code that imports the base44 SDK with @/integrations, @/entities, etc.

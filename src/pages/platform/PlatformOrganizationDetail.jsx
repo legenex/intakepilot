@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
-import { Building2, AlertTriangle, Loader2, ArrowLeft } from 'lucide-react';
+import { Building2, AlertTriangle, Loader2 } from 'lucide-react';
 
 export default function PlatformOrganizationDetail() {
   const { id } = useParams();

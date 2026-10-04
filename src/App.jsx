@@ -52,7 +52,6 @@ import Messages from '@/pages/Messages';
 import CallCenter from '@/pages/CallCenter';
 import Integrations from '@/pages/Integrations';
 import ComplianceAudit from '@/pages/ComplianceAudit';
-import ComingSoon from '@/pages/ComingSoon';
 import WorkflowsList from '@/pages/WorkflowsList';
 import WorkflowEditor from '@/pages/WorkflowEditor';
 import WorkflowRuns from '@/pages/WorkflowRuns';

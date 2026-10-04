@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import AppSidebar from './AppSidebar';
 import ThemeToggle from '@/components/shared/ThemeToggle';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Search, AlertTriangle, Loader2 } from 'lucide-react';
+import { Menu, Search, AlertTriangle, Loader2 } from 'lucide-react';
 import { useOrg } from '@/lib/OrgContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import CommandPalette from '@/components/app/CommandPalette';

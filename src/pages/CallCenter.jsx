@@ -6,9 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed, Clock, Mic, ArrowRightLeft, Play, Download } from 'lucide-react';
+import { Phone, PhoneIncoming, PhoneOutgoing, Clock, Mic, ArrowRightLeft, Play } from 'lucide-react';
 import { getLeadName } from '@/lib/leadUtils';
-import { formatDistanceToNow, format } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 
 const STATUS_STYLES = {
   completed: 'bg-success/10 text-success border-success/20',
