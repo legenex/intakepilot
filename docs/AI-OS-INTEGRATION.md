@@ -30,20 +30,16 @@ Verified 2026-10-04 via AI OS context: NOW is AI OS + GX cluster first, then age
 |---|---|
 | Project name | `intakepilot` (existing; do not `ai new`) |
 | GitHub | `legenex/intakepilot` |
-| Durable ai-context | `gx10-01:/home/legenex/Documents/Projects/IntakePilot` |
-| Live Postgres location | **not attached** until owner admin token registers discovery |
+| Durable ai-context | `gx10-01:/home/legenex/Documents/Projects/IntakePilot` @ `2786188` |
+| Live Postgres location | `gx10-01` working-copy, status `ok`, `VERIFIED ACTIVE` |
 | `gx10-01` default root | `/srv/projects` |
-| `gx10-01` allowed_roots | `[]` — Documents/Projects is outside scan roots |
+| `gx10-01` allowed_roots | `/home/legenex/Documents/Projects` |
 
-Machine-token `POST /api/agent/discovery/report` for this path returned 200 and queued discovery. Completing registration:
+Registration used Dashflo production admin in-place (`ssh dashflo`), not a copied admin token on gx10-01. gx10-01 keeps only its machine identity. Root-policy (`allowed_roots`) remains an admin/portal change. Machine tokens report discovery/git-state; attaching a discovered path to a project is `POST /api/discovery/register`.
 
-1. Add `/home/legenex/Documents/Projects` to gx10-01 allowed roots (keep `/srv/projects` as default).
-2. `POST /api/discovery/register` with `{ "machine": "gx10-01", "path": "/home/legenex/Documents/Projects/IntakePilot" }` (or portal Discover → Register).
-3. `ai agent once` so inspect/git-state refresh runs.
+Portal: `https://ai.legenex.com` — project `intakepilot` has a manageable gx10-01 working copy.
 
-`ai register` and portal machine APIs require `AI_OS_ADMIN_TOKEN`. gx10-01 has only a machine token. Hermes’ stored CLI `token` currently returns 401.
-
-Portal UI: `https://ai.legenex.com` — project is listed; working-copy manageability needs the location row.
+Read-only project-agent (`POST /api/workspace/run` mode `plan`) executed on gx10-01 against this path (session `ec6b6819-a056-4861-9eb5-f1ee96989973`).
 
 ## How Hermes / AgentOS executes it
 
@@ -54,7 +50,7 @@ AgentOS `execution/registry.yaml` (do not duplicate here if that file moves):
 - `execution_host`: `gx10-01`
 - `lane`: `gx10`
 - `kanban_board`: `intakepilot`
-- Buzz channel field: `#intake-pilot` (CHANNELS.md also uses `#intakepilot` — treat as the same project, confirm live Buzz name before sending)
+- Live Buzz channel slug: `intake-pilot` (UUID `4305f271-642a-4d13-83a0-60535346159b`) → project `intakepilot`. Markdown sometimes writes `#intakepilot`; key on channel id, not the display name.
 
 Hermes is control plane only. No IntakePilot software build should depend on a VPS checkout.
 

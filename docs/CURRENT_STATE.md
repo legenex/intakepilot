@@ -10,7 +10,7 @@ Verified 2026-10-04 on `gx10-01` against this working copy and GitHub. Not a roa
 | Repo | `legenex/intakepilot` |
 | Default branch | `main` |
 | Working copy | `/home/legenex/Documents/Projects/IntakePilot` |
-| HEAD at inspection | `490dd4e0ad9a246a9c28e23c0476b18d942ee5fe` |
+| HEAD at inspection | `2786188a7b692eaf5962ae470131268179b2f144` |
 | GitHub visibility | **PUBLIC** (owner-review item; not changed) |
 | Priority | unconfirmed — absent from `company/CURRENT_PRIORITIES.md` NOW list |
 | Lifecycle | unconfirmed |
@@ -47,13 +47,14 @@ Retell, Vapi, Twilio, Stripe, webhook delivery to buyers, BigQuery UI stub. Secr
 
 ## AI OS / AgentOS
 
-- Durable `legenex/ai-context` project page records this gx10-01 path.
-- Live AI OS Postgres registry still had **no working-copy location** at last admin-API check. Discovery report for this path was accepted (`POST /api/agent/discovery/report` → 200). Attaching it requires owner `AI_OS_ADMIN_TOKEN` (`POST /api/discovery/register`) plus adding `/home/legenex/Documents/Projects` to `gx10-01` `allowed_roots`.
-- AgentOS `execution/registry.yaml` already maps `intakepilot` → this path, lane `gx10`. Do not clone a competing copy on Hermes.
+- Live AI OS location: `gx10-01:/home/legenex/Documents/Projects/IntakePilot`, status `ok`, classification `VERIFIED ACTIVE`, commit `2786188`, branch `main`, dirty false.
+- `gx10-01` `default_root` remains `/srv/projects`. `allowed_roots` includes `/home/legenex/Documents/Projects`.
+- Durable `legenex/ai-context` records the same path and HEAD.
+- AgentOS `execution/registry.yaml` maps `intakepilot` → this path, lane `gx10`. Do not clone a competing copy on Hermes.
+- Buzz live channel slug: `intake-pilot` (id `4305f271-642a-4d13-83a0-60535346159b`) → project `intakepilot`.
 
 ## Known blockers
 
-1. **Human:** valid `AI_OS_ADMIN_TOKEN` (Hermes `~/.config/ai-os/config.json` `token` is 401). Needed to register the live working copy and add the allowed root.
-2. **Human:** GitHub visibility PUBLIC — do not change without Nick.
-3. **Local Base44:** `base44 link` + `.env.local` if interactive Base44 auth is required on this machine.
-4. Do not treat historical `docs/history/*_SUMMARY.md` as live completion proof.
+1. **Human:** GitHub visibility PUBLIC — do not change without Nick.
+2. **Local Base44:** `base44 link` + `.env.local` if interactive Base44 auth is required on this machine.
+3. Do not treat historical `docs/history/*_SUMMARY.md` as live completion proof.
